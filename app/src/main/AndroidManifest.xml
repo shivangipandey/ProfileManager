@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.shivangipandey.profilemanager">
+
+    <!-- permission required to use Alarm Manager -->
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/icon"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".EditProfileActivity"
+            android:label="Modify"/>
+
+        <receiver android:name=".NotificationSilenceReciever">
+            <intent-filter>
+                <action android:name="com.example.shivangipandey.notificationoff.NotificationSilenceReciever" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".UnsilenceNotifications">
+            <intent-filter>
+                <action android:name="com.example.shivangipandey.notificationoff.UnsilenceNotificationReciever" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".BootUpReciever"
+            android:enabled="true"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+        <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            <category android:name="android.intent.category.DEFAULT"/>
+        </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".modeDialogActivity"
+            android:label="Select modes"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+        <activity android:name=".ProfilePictureDialogActivity"
+            android:label="Select picture"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" ></activity>
+        <activity android:name=".VolumeActivity"
+            android:label="Set volume"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"></activity>
+    </application>
+
+</manifest>
