@@ -278,6 +278,7 @@ public class EditProfileActivity extends AppCompatActivity{
                     am.cancel(midPI);
                     midPI.cancel();
                     new Session(EditProfileActivity.this).setProfileActive(false,profiles.getProfile());
+                    new ActiveProfiles(EditProfileActivity.this).deleteValue(profiles.getProfile());
                 }
 
                 setTimeMethod(hourOfDay_start,minute_start,NotificationSilenceReciever.class,"com.example.shivangipandey.notificationoff.NotificationSilenceReciever",profiles.getPendingIntentSilenceId());
@@ -378,13 +379,7 @@ public class EditProfileActivity extends AppCompatActivity{
         if(midnightCalender.before(now)) {
             midnightCalender.add(Calendar.DAY_OF_MONTH, 1);
             Toast.makeText(this, "Your profile will activate at "+midnightCalender.getTime()+" from tomorrow", Toast.LENGTH_LONG).show();
-
-            Calendar toCalendar = Calendar.getInstance();
-            toCalendar.set(Calendar.HOUR_OF_DAY,profiles.getEndHour());
-            toCalendar.set(Calendar.MINUTE,profiles.getEndMin());
-            if(!toCalendar.before(now)){
-                flag = true;
-            }
+            flag = true;
         }
         else
             Toast.makeText(this, "Your profile will activate at "+midnightCalender.getTime()+" from today", Toast.LENGTH_LONG).show();

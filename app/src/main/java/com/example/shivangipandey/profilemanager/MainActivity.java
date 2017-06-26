@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        midnightAlarmStart();
 
         listView = (ListView) findViewById(R.id.profileListView);
         final ArrayList<Profiles> profilesArrayList = new ArrayList<>();
@@ -117,10 +120,10 @@ public class MainActivity extends AppCompatActivity{
                 .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        cancelIntents(profiles);
                         new Session(MainActivity.this).setProfileActive(false,profiles.getProfile());
                         new ActiveProfiles(MainActivity.this).deleteValue(profiles.getProfile());
                         delete(profiles.getProfile(),profileNames);
-                        cancelIntents(profiles);
                         new ActiveProfiles(MainActivity.this).deleteValue(profiles.getProfile());
                     }
                 });
@@ -171,8 +174,10 @@ public class MainActivity extends AppCompatActivity{
         if(midPI != null){
             am.cancel(midPI);
             midPI.cancel();
-            if(new Session(MainActivity.this).isProfileActive(profiles.getProfile()))
+            String name = profiles.getProfile();
+            if(new Session(MainActivity.this).isProfileActive(name)) {
                 sendBroadcast(i);
+            }
         }
         if(midPI2 != null){
             am.cancel(midPI2);
@@ -183,5 +188,17 @@ public class MainActivity extends AppCompatActivity{
         }
         Toast.makeText(MainActivity.this,"Pending Intents disabled", Toast.LENGTH_SHORT).show();
 
+    }
+
+    private void midnightAlarmStart(){
+       PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0,new Intent(Intent.ACTION_BOOT_COMPLETED),PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MINUTE, 4);
+        calendar.set(Calendar.HOUR, 15);
+        calendar.set(Calendar.AM_PM, Calendar.PM);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
     }
 }

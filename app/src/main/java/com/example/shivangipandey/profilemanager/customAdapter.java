@@ -62,6 +62,12 @@ public class customAdapter extends ArrayAdapter<Profiles> {
 
         final Profiles profiles = getItem(position);
 
+        if(profiles == null){
+            Toast.makeText(context,"Kindly restart the application", Toast.LENGTH_SHORT).show();
+            return listItemView;
+        }
+
+
         startTime = (TextView)listItemView.findViewById(R.id.start_time);
         endTime = (TextView)listItemView.findViewById(R.id.end_time);
         profileName = (TextView)listItemView.findViewById(R.id.profileName);
@@ -90,6 +96,7 @@ public class customAdapter extends ArrayAdapter<Profiles> {
                         midPI.cancel();
                         am.cancel(midPI);
                         new Session(context).setProfileActive(false,profiles.getProfile());
+                        new ActiveProfiles(context).deleteValue(profiles.getProfile());
                     }
                     setTimeMethod(hourOfDay_start,minute_start,NotificationSilenceReciever.class,"com.example.shivangipandey.notificationoff.NotificationSilenceReciever",profiles.getPendingIntentSilenceId(),profiles);
                     Toast.makeText(context,"Alarm enabled", Toast.LENGTH_SHORT).show();
@@ -168,13 +175,7 @@ public class customAdapter extends ArrayAdapter<Profiles> {
         midnightCalender.set(Calendar.MINUTE,minute);
 
         if(midnightCalender.before(now)) {
-
-            Calendar toCalendar = Calendar.getInstance();
-            toCalendar.set(Calendar.HOUR_OF_DAY,profiles.getEndHour());
-            toCalendar.set(Calendar.MINUTE,profiles.getEndMin());
-            if(!toCalendar.before(now)){
-                flag = true;
-            }
+            flag = true;
             midnightCalender.add(Calendar.DAY_OF_MONTH, 1);
             Toast.makeText(context, "Your profile will activate at "+midnightCalender.getTime()+"from tomorrow", Toast.LENGTH_LONG).show();
         }
@@ -223,7 +224,6 @@ public class customAdapter extends ArrayAdapter<Profiles> {
 
     }
     private boolean checkSilenceIntent(Profiles profiles){
-        AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent i2 = new Intent(context,NotificationSilenceReciever.class);
         i2.putExtra("profiles",profiles);
         i2.setAction("com.example.shivangipandey.notificationoff.NotificationSilenceReciever");

@@ -54,11 +54,7 @@ public class Session {
     }
     public void setProfileActive(boolean active,String profile){
         editor.putBoolean("active"+profile,active);
-        editor.apply();
-    }
-    public void setPreActiveProfile(String preProfile,String profile){
-        editor.putString("preActive"+profile,preProfile);
-        editor.apply();
+        editor.commit();
     }
     public void setCurrentVolume(int volume[],String profile){
         String name[] = {"ringer","media","alarm","system","voicecall","notification"};
@@ -98,17 +94,7 @@ public class Session {
             volume[i] = sharedPreferences.getInt(name[i]+profile,audioManager.getStreamVolume(streams[i]));
         return volume;
     }
-
-    public boolean contains(String key){
-        if(sharedPreferences.contains(key))
-            return true;
-        else
-            return false;
-    }
     public boolean isProfileActive(String profile){
         return sharedPreferences.getBoolean("active"+profile,false);
-    }
-    public String preActiveProfile(String profile){
-        return sharedPreferences.getString("preActive"+profile,null);
     }
 }

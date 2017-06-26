@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.shivangipandey.profilemanager">
+    package="com.example.shivangipandey.profilemanager"
+    android:installLocation="internalOnly">
 
     <!-- permission required to use Alarm Manager -->
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
@@ -23,8 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EditProfileActivity"
-            android:label="Modify"/>
+        <activity
+            android:name=".EditProfileActivity"
+            android:label="Modify" />
 
         <receiver android:name=".NotificationSilenceReciever">
             <intent-filter>
@@ -36,26 +38,29 @@
                 <action android:name="com.example.shivangipandey.notificationoff.UnsilenceNotificationReciever" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".BootUpReciever"
+        <receiver
+            android:name=".BootUpReciever"
             android:enabled="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
-        <intent-filter>
-            <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            <category android:name="android.intent.category.DEFAULT"/>
-        </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </receiver>
 
         <activity
             android:name=".modeDialogActivity"
             android:label="Select modes"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
-        <activity android:name=".ProfilePictureDialogActivity"
+        <activity
+            android:name=".ProfilePictureDialogActivity"
             android:label="Select picture"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" ></activity>
-        <activity android:name=".VolumeActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+        <activity
+            android:name=".VolumeActivity"
             android:label="Set volume"
-            android:theme="@style/Theme.AppCompat.Light.Dialog"></activity>
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
     </application>
 
 </manifest>

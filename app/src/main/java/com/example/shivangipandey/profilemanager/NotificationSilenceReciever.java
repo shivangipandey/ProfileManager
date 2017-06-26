@@ -47,7 +47,6 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
                     session.setProfile(profiles.getProfile());
                     session.setProfileActive(true, profileName);
                     new ActiveProfiles(context).addValue(profileName);
-                    session.setProfileActive(true, profileName);
                     session.setAlarmMode(false, profileName);
                     session.setDoNotDisturbMode(false, profileName);
                     session.setGeneralMode(false, profileName);
