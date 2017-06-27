@@ -448,7 +448,7 @@ public class EditProfileActivity extends AppCompatActivity{
 
             if(calEnd.after(now))
                 flag = true;
-            Toast.makeText(this, "Your profile will activate at "+midnightCalender.getTime()+" from tomorrow", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Your profile will activate at "+midnightCalender.getTime()+" from tomorrow.", Toast.LENGTH_LONG).show();
         }
         else
             Toast.makeText(this, "Your profile will activate at "+midnightCalender.getTime()+" from today", Toast.LENGTH_LONG).show();
