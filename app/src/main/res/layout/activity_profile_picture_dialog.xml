@@ -15,21 +15,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@android:color/darker_gray">
+        android:background="#33D3D3D3">
     <ImageView
         android:background="?selectableItemBackgroundBorderless"
         android:layout_margin="5dp"
         android:id="@+id/office"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:src="@drawable/office"/>
-    <ImageView
-        android:background="?selectableItemBackgroundBorderless"
-        android:layout_margin="5dp"
-        android:id="@+id/sleep"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sleep_baby"/>
+        <ImageView
+            android:background="?selectableItemBackgroundBorderless"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_margin="5dp"
+            android:id="@+id/meeting"
+            android:src="@drawable/meeting"/>
     <ImageView
         android:background="?selectableItemBackgroundBorderless"
         android:id="@+id/home"
@@ -50,15 +50,22 @@
          android:layout_margin="5dp"
          android:id="@+id/study"
          android:layout_width="match_parent"
-         android:layout_height="wrap_content"
+         android:layout_height="200dp"
          android:src="@drawable/study"/>
+        <ImageView
+            android:background="?selectableItemBackgroundBorderless"
+            android:id="@+id/sleep"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/sleep_baby"/>
      <ImageView
          android:background="?selectableItemBackgroundBorderless"
          android:layout_width="match_parent"
-         android:layout_height="wrap_content"
+         android:layout_height="200dp"
          android:layout_margin="5dp"
          android:id="@+id/default_pic"
          android:src="@drawable/default_pic"/>
+
     </LinearLayout>
 </ScrollView>
     <android.support.design.widget.FloatingActionButton

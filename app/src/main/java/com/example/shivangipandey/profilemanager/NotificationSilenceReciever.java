@@ -30,6 +30,7 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
     Session session;
     @Override
     public void onReceive(Context context, Intent intent) {
+        boolean flag1 = true;
         session = new Session(context);
         profiles = (Profiles)intent.getSerializableExtra("profiles");
         profileName = profiles.getProfile();
@@ -44,102 +45,18 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
                     AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
                     NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-                    session.setProfile(profiles.getProfile());
-                    session.setProfileActive(true, profileName);
-                    new ActiveProfiles(context).addValue(profileName);
-                    session.setAlarmMode(false, profileName);
-                    session.setDoNotDisturbMode(false, profileName);
-                    session.setGeneralMode(false, profileName);
-                    session.setVibrationMode(false, profileName);
-
-                    int streams[] ={AudioManager.STREAM_RING,AudioManager.STREAM_MUSIC,AudioManager.STREAM_ALARM,AudioManager.STREAM_SYSTEM,AudioManager.STREAM_VOICE_CALL,AudioManager.STREAM_NOTIFICATION};
-                    int volume[] = new int[streams.length];
-
-                    for(int i =0;i<streams.length;i++){
-                        volume[i]=audioManager.getStreamVolume(streams[i]);
-                    }
-
-                    session.setCurrentVolume(volume,profileName);
-
-                    if (!(checkUnsilencePIExist(context, false))) {
-                        setPendingIntentUnSilenceRecievr(context);
-                    }
-
-                    volume = profiles.getvolumes();
-                    if(volume!=null) {
-                        boolean flag = true;
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if(notificationManager.getCurrentInterruptionFilter() == NotificationManager.INTERRUPTION_FILTER_NONE) {
-                                flag = false;
-                                Toast.makeText(context,"Do Not Disturb mode needs to be disabled to change the volume.", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        if(flag)
-                            for (int i = 0; i < volume.length; i++)
-                                audioManager.setStreamVolume(streams[i], volume[i], 0);
-                    }
-
-                    session.setRingerMode(audioManager.getRingerMode(), profileName);
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        session.setCurruntMode(notificationManager.getCurrentInterruptionFilter(), profileName);
-                    }
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (!notificationManager.isNotificationPolicyAccessGranted()) {
                             Intent intent1 = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
                             intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent1);
-                        } else
-                            startNotification(context);
-                    } else
-                        startNotification(context);
-
-                    if (profiles.getDoNotDisturbMode()) {
-                        session.setDoNotDisturbMode(true, profileName);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
-                        } else
-                            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                        Toast.makeText(context, "Do not disturb enabled", Toast.LENGTH_LONG).show();
-                    } else {
-                        if (profiles.getGeneralMode()) {
-                            session.setGeneralMode(true, profileName);
-                            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                            Toast.makeText(context, "general mode enabled", Toast.LENGTH_SHORT);
-                        } else {
-                            if (profiles.getAlarmMode()) {
-                                session.setAlarmMode(true, profileName);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALARMS);
-                                } else {
-                                    Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-                                    if (alert == null) {
-                                        // alert is null, using backup
-                                        alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                                        if (alert == null) {
-                                            // alert backup is null, using 2nd backup
-                                            alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                                        }
-                                    }
-                                    RingtoneManager.getRingtone(context, alert).setStreamType(AudioManager.STREAM_ALARM);
-                                }
-                                Toast.makeText(context, "Everything accept alarms disabled", Toast.LENGTH_SHORT);
-                            }
-                            if (profiles.getVibrationMode()) {
-                                session.setVibrationMode(true, profileName);
-                                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                                Toast.makeText(context, "Vibration mode enabled", Toast.LENGTH_SHORT).show();
-                            }
                         }
-                        if (!profiles.getGeneralMode() && !profiles.getVibrationMode()) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL);
-                            }
-                            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                        }
+                        while (!notificationManager.isNotificationPolicyAccessGranted())
+                            flag1 = false;
+                        flag1 = true;
                     }
+                    if(flag1)
+                        setAllThings(context,notificationManager,audioManager);
                 }
             }
             catch(Exception e){
@@ -150,6 +67,99 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
         else{
                 checkUnsilencePIExist(context, true);
             }
+
+    }
+
+    private void setAllThings(Context context,NotificationManager notificationManager,AudioManager audioManager) throws Exception{
+
+        startNotification(context);
+
+        session.setProfile(profiles.getProfile());
+        session.setProfileActive(true, profileName);
+        new ActiveProfiles(context).addValue(profileName);
+        session.setAlarmMode(false, profileName);
+        session.setDoNotDisturbMode(false, profileName);
+        session.setGeneralMode(false, profileName);
+        session.setVibrationMode(false, profileName);
+
+        int streams[] ={AudioManager.STREAM_RING,AudioManager.STREAM_MUSIC,AudioManager.STREAM_ALARM,AudioManager.STREAM_SYSTEM,AudioManager.STREAM_VOICE_CALL,AudioManager.STREAM_NOTIFICATION};
+        int volume[] = new int[streams.length];
+
+        for(int i =0;i<streams.length;i++){
+            volume[i]=audioManager.getStreamVolume(streams[i]);
+        }
+
+        session.setCurrentVolume(volume,profileName);
+
+        if (!(checkUnsilencePIExist(context, false))) {
+            setPendingIntentUnSilenceRecievr(context);
+        }
+
+        volume = profiles.getvolumes();
+        if(volume!=null) {
+            boolean flag = true;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if(notificationManager.getCurrentInterruptionFilter() == NotificationManager.INTERRUPTION_FILTER_NONE) {
+                    flag = false;
+                    Toast.makeText(context,"Do Not Disturb mode needs to be disabled to change the volume.", Toast.LENGTH_SHORT).show();
+                }
+            }
+            if(flag)
+                for (int i = 0; i < volume.length; i++)
+                    audioManager.setStreamVolume(streams[i], volume[i], 0);
+        }
+
+        session.setRingerMode(audioManager.getRingerMode(), profileName);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            session.setCurruntMode(notificationManager.getCurrentInterruptionFilter(), profileName);
+        }
+
+        if (profiles.getDoNotDisturbMode()) {
+            session.setDoNotDisturbMode(true, profileName);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
+            } else
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            Toast.makeText(context, "Do not disturb enabled", Toast.LENGTH_LONG).show();
+        } else {
+            if (profiles.getGeneralMode()) {
+                session.setGeneralMode(true, profileName);
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                Toast.makeText(context, "general mode enabled", Toast.LENGTH_SHORT);
+            } else {
+                if (profiles.getAlarmMode()) {
+                    session.setAlarmMode(true, profileName);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALARMS);
+                    } else {
+                        Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+                        if (alert == null) {
+                            // alert is null, using backup
+                            alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                            if (alert == null) {
+                                // alert backup is null, using 2nd backup
+                                alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                            }
+                        }
+                        RingtoneManager.getRingtone(context, alert).setStreamType(AudioManager.STREAM_ALARM);
+                    }
+                    Toast.makeText(context, "Everything accept alarms disabled", Toast.LENGTH_SHORT);
+                }
+                if (profiles.getVibrationMode()) {
+                    session.setVibrationMode(true, profileName);
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                    Toast.makeText(context, "Vibration mode enabled", Toast.LENGTH_SHORT).show();
+                }
+            }
+            if (!profiles.getGeneralMode() && !profiles.getVibrationMode()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL);
+                }
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            }
+        }
 
     }
 

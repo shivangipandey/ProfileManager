@@ -8,13 +8,36 @@
 
     <RelativeLayout
         android:gravity="center|bottom"
-        android:padding="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-    <LinearLayout
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/blurry4"
+            android:layout_centerHorizontal="true"
+            />
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:background="?selectableItemBackgroundBorderless"
+            android:layout_below="@id/imageView"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/circle_icon"
+            android:layout_marginTop="-50dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/club"
+            app:civ_border_color="#EEEEEE"
+            app:civ_border_width="4dp"
+            app:civ_shadow="true"
+            app:civ_shadow_radius="10"
+            app:civ_shadow_color="#8BC34A"/>
+
+        <LinearLayout
+            android:layout_below="@id/circle_icon"
+            android:layout_margin="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -35,55 +58,15 @@
             android:layout_height="match_parent" />
 
     </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/linearLayout"
-            android:layout_centerHorizontal="true">
-
-            <Button
-                android:layout_marginTop="10dp"
-                android:layout_below="@id/linearLayout"
-                android:id="@+id/mode_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mode" />
-            <Button
-                android:layout_marginTop="10dp"
-                android:layout_below="@id/linearLayout"
-                android:id="@+id/volume_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="volume"
-                />
-
-        </LinearLayout>
-
-
-
-    <ImageView
-        android:layout_margin="20dp"
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:layout_weight="2"
-        android:scaleType="centerInside"
-        android:background="?selectableItemBackgroundBorderless"
-        android:src="@drawable/sleep_baby"
-        android:layout_below="@+id/ll"
-        android:layout_centerHorizontal="true"
-        />
-
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/imageView">
+        android:layout_below="@+id/linearLayout">
 
         <TextView
+            android:id="@+id/label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -94,9 +77,11 @@
             />
 
         <LinearLayout
+            android:layout_below="@id/label"
             android:id="@+id/linearLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -120,7 +105,7 @@
                 <TextView
                     android:id="@+id/textView5"
                     android:layout_width="match_parent"
-                    android:layout_height="32dp"
+                    android:layout_height="20dp"
                     android:gravity="center_horizontal"
                     android:text="Start Time"
                     android:textColor="#18E9D6" />
@@ -149,7 +134,7 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="32dp"
+                    android:layout_height="20dp"
                     android:text="End Time"
                     android:gravity="center_horizontal"
                     android:textColor="#18E9D6"
@@ -176,7 +161,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="20dp">
+            android:padding="10dp">
             <CheckBox
                 android:id="@+id/sunday"
                 android:layout_width="0dp"
@@ -257,27 +242,38 @@
         </LinearLayout>
     </RelativeLayout>
 
-        <LinearLayout
-            android:layout_below="@id/relativeLayout"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/linearLayout2">
-
             <Button
+                android:background="?selectableItemBackgroundBorderless"
                 android:id="@+id/saveProfile"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Save" />
+                android:layout_height="36dp"
+                android:drawableLeft="@drawable/ic_done_black_24dp"
+                android:drawablePadding="-10dp"
+                android:text="save"
+                android:layout_below="@+id/relativeLayout"
+                android:layout_alignLeft="@+id/cancelProfile"
+                android:layout_alignStart="@+id/cancelProfile"
+                android:layout_marginTop="20dp" />
 
             <Button
+                android:layout_marginLeft="10dp"
+                android:background="?selectableItemBackground"
                 android:id="@+id/cancelProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="cancel" />
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:drawableLeft="@drawable/ic_keyboard_backspace_black_24dp"
+               />
 
-        </LinearLayout>
+        <com.nightonke.boommenu.BoomMenuButton
+            android:layout_below="@id/relativeLayout"
+            android:id="@+id/bmb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:bmb_buttonEnum="ham"
+            app:bmb_piecePlaceEnum="piecePlace_ham_3"
+            app:bmb_buttonPlaceEnum="buttonPlace_ham_3"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"/>
     </RelativeLayout>
 </ScrollView>
 

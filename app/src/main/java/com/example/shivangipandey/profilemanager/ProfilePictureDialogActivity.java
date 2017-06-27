@@ -29,6 +29,7 @@ public class ProfilePictureDialogActivity extends AppCompatActivity {
     private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
     private String userChoosenTask;
     Profiles profiles;
+    boolean isIcon;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,11 +37,18 @@ public class ProfilePictureDialogActivity extends AppCompatActivity {
 
         profiles = (Profiles)getIntent().getSerializableExtra("profile");
 
-        int imageViewId[] = {R.id.office,R.id.sleep,R.id.home,R.id.club,R.id.study,R.id.default_pic};
-        int images[] = {R.drawable.office,R.drawable.sleep_baby,R.drawable.home,R.drawable.club,R.drawable.study,R.drawable.default_pic};
+        isIcon = getIntent().getBooleanExtra("isIcon",false);
+
+        int imageViewId[] = {R.id.office,R.id.meeting,R.id.home,R.id.club,R.id.study,R.id.sleep,R.id.default_pic};
+        int images[] = {R.drawable.office,R.drawable.meeting,R.drawable.home,R.drawable.club,R.drawable.study,R.drawable.sleep_baby,R.drawable.default_pic};
         final ImageView imageView[] = new ImageView[imageViewId.length];
+        int backgroundImages[] = {R.drawable.blurry1,R.drawable.blurry2,R.drawable.blurry3,R.drawable.blurry4,R.drawable.blurry5,R.drawable.blurry6,R.drawable.blurry7};
 
         FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab_profile);
+
+        if(!isIcon)
+            fab.setVisibility(View.GONE);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,10 +56,14 @@ public class ProfilePictureDialogActivity extends AppCompatActivity {
             }
         });
 
-
         for(int i = 0;i<imageViewId.length;i++){
             imageView[i] = (ImageView) findViewById(imageViewId[i]);
-            imageView[i].setTag(images[i]);
+            if(!isIcon) {
+                imageView[i].setTag(backgroundImages[i]);
+                imageView[i].setImageResource(backgroundImages[i]);
+            }
+            else
+                imageView[i].setTag(images[i]);
         }
         for(int i = 0;i<imageView.length;i++){
             imageView[i].setOnClickListener(new View.OnClickListener() {
@@ -63,7 +75,10 @@ public class ProfilePictureDialogActivity extends AppCompatActivity {
                     Integer id = (Integer)ib.getTag();
                     intent.putExtra("imageId",id);
                     intent.putExtra("bitmap",-1);
-                    setResult(4,intent);
+                    if(!isIcon)
+                        setResult(5,intent);
+                    else
+                        setResult(4,intent);
                     finish();
                 }
             });

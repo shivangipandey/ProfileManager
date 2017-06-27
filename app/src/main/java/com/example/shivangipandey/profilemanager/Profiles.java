@@ -24,9 +24,10 @@ public class Profiles implements Serializable{
     private boolean profileIsEnabled;
     private int pendingIntentSilenceId = -1;
     private int pendingIntentUnSilenceId = -2;
-    private int imageId = R.drawable.sleep_baby;
+    private int imageId = R.drawable.default_pic;
     private int progress[] = null;
     private byte[] bitmpaArray = null;
+    private int imageBackgroundId = R.drawable.blurry4;
 
     public Profiles(){
     }
@@ -53,6 +54,7 @@ public class Profiles implements Serializable{
     public void setPendingSilenceIntent(int pendingIntentSilenceId){
         this.pendingIntentSilenceId = pendingIntentSilenceId;
     }
+
     public void setPendingIntentUnSilenceId(int pendingIntenUnSilenceId){
         this.pendingIntentUnSilenceId = pendingIntenUnSilenceId;
     }
@@ -77,6 +79,9 @@ public class Profiles implements Serializable{
     }
     public void setImageId(int imageId){
         this.imageId = imageId;
+    }
+    public void setImageBackgroundIdId(int imageBackgroundId){
+        this.imageBackgroundId = imageBackgroundId;
     }
     public void setVolume(int[] volume){
         progress = volume;
@@ -130,6 +135,9 @@ public class Profiles implements Serializable{
     }
     public int getImageId(){
         return imageId;
+    }
+    public int getBackgroundImageId(){
+        return imageBackgroundId;
     }
     public int[] getvolumes(){
         return progress;

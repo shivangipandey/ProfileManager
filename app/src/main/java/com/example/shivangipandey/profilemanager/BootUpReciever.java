@@ -101,7 +101,14 @@ public class BootUpReciever extends BroadcastReceiver {
         midnightCalender.set(Calendar.MINUTE,minute);
 
         if(midnightCalender.before(now)) {
-            flag = true;
+
+            Calendar calEnd = Calendar.getInstance();
+            calEnd.set(Calendar.HOUR_OF_DAY,profiles.getEndHour());
+            calEnd.set(Calendar.MINUTE,profiles.getEndMin());
+
+            if(calEnd.after(now))
+                flag = true;
+
             midnightCalender.add(Calendar.DAY_OF_MONTH, 1);
             Toast.makeText(context, "Your profile will activate at "+midnightCalender.getTime()+"from tomorrow", Toast.LENGTH_LONG).show();
         }

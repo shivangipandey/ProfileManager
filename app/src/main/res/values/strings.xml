@@ -6,4 +6,12 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="mode">Mode</string>
+    <string name="volume">Volume</string>
+    <string name="to_do_list">To do list</string>
+
+    <string name="mode_Txt">Add profile modes.</string>
+    <string name="volume_Txt">Customize volume.</string>
+    <string name="todolist_txt">Add stuffs to do ahead.</string>
 </resources>

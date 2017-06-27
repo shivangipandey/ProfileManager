@@ -19,6 +19,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.mikhaellopez.circularimageview.CircularImageView;
+import com.nightonke.boommenu.BoomButtons.HamButton;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomMenuButton;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,7 +33,7 @@ import java.util.Calendar;
 public class EditProfileActivity extends AppCompatActivity{
 
     private EditText mProfileName;
-    private Button startTime, endTime,mMode,mSave,mCancel,mVolume;
+    private Button startTime, endTime,mSave,mCancel;
     int checkBoxIDS[] = {R.id.sunday, R.id.monday, R.id.tuesday, R.id.wednesday, R.id.thrusday, R.id.friday, R.id.saturday};
     private CheckBox[] checkBoxes = new CheckBox[7];
     boolean daysEnable[] = new boolean[7];
@@ -38,6 +43,11 @@ public class EditProfileActivity extends AppCompatActivity{
     boolean editProfile = false;
     int position = -1;
     ImageView imageView;
+    BoomMenuButton bmb;
+    CircularImageView circularImageView;
+    int stringIds[] = {R.string.mode,R.string.volume,R.string.to_do_list};
+    int stringIdTxts[] = {R.string.mode_Txt,R.string.volume_Txt,R.string.todolist_txt};
+    int imgeRes[] = {R.drawable.ic_wb_sunny_black_24dp,R.drawable.ic_speaker_phone_black_24dp,R.drawable.ic_pets_black_24dp};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,10 +62,51 @@ public class EditProfileActivity extends AppCompatActivity{
         mCancel = (Button)findViewById(R.id.cancelProfile);
         profileNames = (ProfileNames)getIntent().getSerializableExtra("profileNames");
         imageView = (ImageView)findViewById(R.id.imageView);
+        circularImageView = (CircularImageView)findViewById(R.id.circle_icon);
+
+        bmb = (BoomMenuButton)findViewById(R.id.bmb);
 
         for (int i = 0; i < checkBoxIDS.length; i++) {
             checkBoxes[i] = (CheckBox) findViewById(checkBoxIDS[i]);
         }
+
+        for (int i = 0; i < bmb.getPiecePlaceEnum().pieceNumber(); i++) {
+            HamButton.Builder builder = new HamButton.Builder()
+                    .normalImageRes(imgeRes[i])
+                    .normalTextRes(stringIds[i])
+                    .subNormalTextRes(stringIdTxts[i])
+                    .listener(new OnBMClickListener() {
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            // When the boom-button corresponding this builder is clicked.
+                            switch (index){
+                                case 0 :
+                                    Intent i = new Intent(EditProfileActivity.this, modeDialogActivity.class);
+                                    i.putExtra("profile", profiles);
+                                    startActivityForResult(i,2);
+                                    overridePendingTransition(R.anim.bottom_in,R.anim.top_out);
+                                    break;
+                                case 1 :
+                                    Intent intent = new Intent(EditProfileActivity.this, VolumeActivity.class);
+                                    intent.putExtra("profile", profiles);
+                                    startActivityForResult(intent,3);
+                                    overridePendingTransition(R.anim.bottom_in,R.anim.top_out);
+                                    break;
+                                case 2 :
+                                    break;
+                            }
+                        }
+                    });
+
+            bmb.addBuilder(builder);
+        }
+
+        for (int i = 0; i < checkBoxIDS.length; i++) {
+            checkBoxes[i] = (CheckBox) findViewById(checkBoxIDS[i]);
+        }
+
+        Calendar cal = Calendar.getInstance();
+        int day = cal.get(Calendar.DAY_OF_WEEK);
 
         if(getIntent().hasExtra("profile")){
             profiles = (Profiles)getIntent().getSerializableExtra("profile");
@@ -85,12 +136,25 @@ public class EditProfileActivity extends AppCompatActivity{
                     checkBoxes[i].setBackgroundResource(R.drawable.circle_enabled_resource);
             }
             editProfile = true;
+            imageView.setImageResource(profiles.getBackgroundImageId());
             if(profiles.getBitmap() != null)
-                imageView.setImageBitmap(profiles.getBitmap());
+                circularImageView.setImageBitmap(profiles.getBitmap());
             else
-                imageView.setImageResource(profiles.getImageId());
+                circularImageView.setImageResource(profiles.getImageId());
         }
 
+        if(!editProfile) {
+            checkBoxes[day - 1].setChecked(true);
+            daysEnable[day - 1] = true;
+            checkBoxes[day - 1].setBackgroundResource(R.drawable.circle_enabled_resource);
+        }
+
+        circularImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(EditProfileActivity.this, "Long press on image, to add your own icon!", Toast.LENGTH_LONG).show();
+            }
+        });
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,7 +229,7 @@ public class EditProfileActivity extends AppCompatActivity{
 
         }
 
-        imageView.setOnLongClickListener(new View.OnLongClickListener() {
+        circularImageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 if (profiles != null) {
@@ -173,31 +237,25 @@ public class EditProfileActivity extends AppCompatActivity{
                     Intent i = new Intent(EditProfileActivity.this,ProfilePictureDialogActivity.class);
                     i.putExtra("profile",profiles);
                     startActivityForResult(i,4);
+                    i.putExtra("isIcon",true);
                 }
                 return true;
             }
         });
 
-        mMode = (Button) findViewById(R.id.mode_button);
-        mMode.setOnClickListener(new View.OnClickListener() {
+        imageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent i = new Intent(EditProfileActivity.this, modeDialogActivity.class);
-                i.putExtra("profile", profiles);
-                startActivityForResult(i,2);
+            public boolean onLongClick(View v) {
+                if (profiles != null) {
+                    Toast.makeText(EditProfileActivity.this, profiles.getProfile(), Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(EditProfileActivity.this,ProfilePictureDialogActivity.class);
+                    i.putExtra("isIcon",false);
+                    i.putExtra("profile",profiles);
+                    startActivityForResult(i,5);
+                }
+                return true;
             }
         });
-
-        mVolume = (Button)findViewById(R.id.volume_button);
-        mVolume.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(EditProfileActivity.this, VolumeActivity.class);
-                i.putExtra("profile", profiles);
-                startActivityForResult(i,3);
-            }
-        });
-
         startTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -359,12 +417,16 @@ public class EditProfileActivity extends AppCompatActivity{
             if(bitmapActive == 0) {
                 Bitmap bitmap = getBitmapImg();
                 profiles.setBitmap(bitmap);
-                imageView.setImageBitmap(profiles.getBitmap());
+                circularImageView.setImageBitmap(profiles.getBitmap());
             }
             else {
                 profiles.setBitmap(null);
-                imageView.setImageResource(profiles.getImageId());
+                circularImageView.setImageResource(profiles.getImageId());
             }
+        }
+        if(requestCode == 5 && data!=null && profiles!=null){
+            profiles.setImageBackgroundIdId(data.getIntExtra("imageId",R.drawable.blurry4));
+            imageView.setImageResource(profiles.getBackgroundImageId());
         }
     }
 
@@ -377,9 +439,16 @@ public class EditProfileActivity extends AppCompatActivity{
         midnightCalender.set(Calendar.MINUTE,minute);
 
         if(midnightCalender.before(now)) {
+
+            Calendar calEnd = Calendar.getInstance();
+            calEnd.set(Calendar.HOUR_OF_DAY,profiles.getEndHour());
+            calEnd.set(Calendar.MINUTE,profiles.getEndMin());
+
             midnightCalender.add(Calendar.DAY_OF_MONTH, 1);
+
+            if(calEnd.after(now))
+                flag = true;
             Toast.makeText(this, "Your profile will activate at "+midnightCalender.getTime()+" from tomorrow", Toast.LENGTH_LONG).show();
-            flag = true;
         }
         else
             Toast.makeText(this, "Your profile will activate at "+midnightCalender.getTime()+" from today", Toast.LENGTH_LONG).show();

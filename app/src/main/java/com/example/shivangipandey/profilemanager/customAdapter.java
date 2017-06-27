@@ -28,6 +28,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mikhaellopez.circularimageview.CircularImageView;
+
 import java.util.Calendar;
 import java.util.List;
 
@@ -44,7 +46,7 @@ public class customAdapter extends ArrayAdapter<Profiles> {
     private Context context;
     private Switch aSwitch;
     Animation zoomin,zoomOut;
-
+    private CircularImageView circularImageView;
     public customAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Profiles> objects) {
         super(context, resource, objects);
         this.context = context;
@@ -78,6 +80,7 @@ public class customAdapter extends ArrayAdapter<Profiles> {
         zoomin = AnimationUtils.loadAnimation(context,R.anim.zoom_in);
         zoomOut = AnimationUtils.loadAnimation(context,R.anim.zoom_out);
         profilePicture.setAnimation(zoomin);
+        circularImageView = (CircularImageView)listItemView.findViewById(R.id.circle_icon);
 
         boolean flag = checkSilenceIntent(profiles);
         aSwitch.setChecked(flag);
@@ -107,10 +110,12 @@ public class customAdapter extends ArrayAdapter<Profiles> {
             }
         });
 
+        profilePicture.setImageResource(profiles.getBackgroundImageId());
+
         if(profiles.getBitmap() == null)
-            profilePicture.setImageResource(profiles.getImageId());
+            circularImageView.setImageResource(profiles.getImageId());
         else
-            profilePicture.setImageBitmap(profiles.getBitmap());
+            circularImageView.setImageBitmap(profiles.getBitmap());
 
        if(profiles.getDoNotDisturbMode()){
             mode2.setVisibility(View.VISIBLE);
@@ -175,7 +180,14 @@ public class customAdapter extends ArrayAdapter<Profiles> {
         midnightCalender.set(Calendar.MINUTE,minute);
 
         if(midnightCalender.before(now)) {
-            flag = true;
+
+            Calendar calEnd = Calendar.getInstance();
+            calEnd.set(Calendar.HOUR_OF_DAY,profiles.getEndHour());
+            calEnd.set(Calendar.MINUTE,profiles.getEndMin());
+
+            if(calEnd.after(now))
+                flag = true;
+
             midnightCalender.add(Calendar.DAY_OF_MONTH, 1);
             Toast.makeText(context, "Your profile will activate at "+midnightCalender.getTime()+"from tomorrow", Toast.LENGTH_LONG).show();
         }

@@ -124,7 +124,6 @@ public class MainActivity extends AppCompatActivity{
                         new Session(MainActivity.this).setProfileActive(false,profiles.getProfile());
                         new ActiveProfiles(MainActivity.this).deleteValue(profiles.getProfile());
                         delete(profiles.getProfile(),profileNames);
-                        new ActiveProfiles(MainActivity.this).deleteValue(profiles.getProfile());
                     }
                 });
 
@@ -196,9 +195,10 @@ public class MainActivity extends AppCompatActivity{
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MINUTE, 4);
-        calendar.set(Calendar.HOUR, 15);
-        calendar.set(Calendar.AM_PM, Calendar.PM);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.AM_PM, Calendar.AM);
+
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
     }
 }
