@@ -28,7 +28,7 @@
             android:layout_marginTop="-50dp"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/club"
+            android:src="@drawable/study"
             app:civ_border_color="#EEEEEE"
             app:civ_border_width="4dp"
             app:civ_shadow="true"
@@ -37,11 +37,13 @@
 
         <LinearLayout
             android:layout_below="@id/circle_icon"
-            android:layout_margin="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/linearLayout">
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/linearLayout">
 
         <TextView
             android:layout_width="0dp"
@@ -50,14 +52,15 @@
             android:layout_height="match_parent"
             android:text="Profile Set For :"
             android:id="@+id/textView" />
-        <EditText
-            android:id="@+id/profileNameEditText"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:hint="Profile Name"
-            android:layout_height="match_parent" />
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/profileNameEditText"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="Profile Name" />
+
+        </LinearLayout>
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:orientation="vertical"
@@ -68,9 +71,9 @@
         <TextView
             android:id="@+id/label"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:gravity="center"
-            android:text="Profile Active Between"
+            android:text="Profile Active Between :"
             android:textSize="25sp"
             android:textColor="#18E9D6"
             android:background="@android:color/white"
@@ -81,7 +84,6 @@
             android:id="@+id/linearLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -161,7 +163,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="10dp">
             <CheckBox
                 android:id="@+id/sunday"
                 android:layout_width="0dp"
@@ -243,16 +247,16 @@
     </RelativeLayout>
 
             <Button
-                android:background="?selectableItemBackgroundBorderless"
                 android:id="@+id/saveProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
-                android:drawableLeft="@drawable/ic_done_black_24dp"
+                android:drawableRight="@drawable/ic_done_black_24dp"
                 android:drawablePadding="-10dp"
                 android:text="save"
                 android:layout_below="@+id/relativeLayout"
                 android:layout_alignLeft="@+id/cancelProfile"
                 android:layout_alignStart="@+id/cancelProfile"
+                android:layout_centerInParent="true"
                 android:layout_marginTop="20dp" />
 
             <Button
@@ -264,16 +268,16 @@
                 android:drawableLeft="@drawable/ic_keyboard_backspace_black_24dp"
                />
 
-        <com.nightonke.boommenu.BoomMenuButton
-            android:layout_below="@id/relativeLayout"
-            android:id="@+id/bmb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:bmb_buttonEnum="ham"
-            app:bmb_piecePlaceEnum="piecePlace_ham_3"
-            app:bmb_buttonPlaceEnum="buttonPlace_ham_3"
-            android:layout_marginRight="10dp"
-            android:layout_alignParentRight="true"/>
+        <!--<com.nightonke.boommenu.BoomMenuButton-->
+            <!--android:layout_below="@id/relativeLayout"-->
+            <!--android:id="@+id/bmb"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:bmb_buttonEnum="ham"-->
+            <!--app:bmb_piecePlaceEnum="piecePlace_ham_3"-->
+            <!--app:bmb_buttonPlaceEnum="buttonPlace_ham_3"-->
+            <!--android:layout_marginRight="10dp"-->
+            <!--android:layout_alignParentRight="true"/>-->
     </RelativeLayout>
 </ScrollView>
 

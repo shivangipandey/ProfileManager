@@ -21,22 +21,14 @@ public class Profiles implements Serializable{
     private int currentMode = NotificationManager.INTERRUPTION_FILTER_ALL;
     private boolean generalMode=false,vibrationMode=false,alarmMode=false,doNotDisturbMode=false;
     private boolean days[] = new boolean[7];
-    private boolean profileIsEnabled;
     private int pendingIntentSilenceId = -1;
     private int pendingIntentUnSilenceId = -2;
-    private int imageId = R.drawable.default_pic;
+    private int imageId = R.drawable.study;
     private int progress[] = null;
     private byte[] bitmpaArray = null;
     private int imageBackgroundId = R.drawable.blurry4;
 
     public Profiles(){
-    }
-
-    public void setEnabled(boolean setEnable){
-        profileIsEnabled = setEnable;
-    }
-    public boolean getEnabled(){
-        return profileIsEnabled;
     }
 
     public void resetProfileName(String profile){

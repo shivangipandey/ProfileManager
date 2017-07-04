@@ -7,22 +7,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.AudioManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.HamButton;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,6 +41,7 @@ import java.util.Calendar;
 
 public class EditProfileActivity extends AppCompatActivity{
 
+    ExtractFromFile extractFromFile;
     private EditText mProfileName;
     private Button startTime, endTime,mSave,mCancel;
     int checkBoxIDS[] = {R.id.sunday, R.id.monday, R.id.tuesday, R.id.wednesday, R.id.thrusday, R.id.friday, R.id.saturday};
@@ -53,6 +63,25 @@ public class EditProfileActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
+        ActionBar mActionBar = getSupportActionBar();
+        assert mActionBar != null;
+        mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(false);
+        LayoutInflater mInflator = LayoutInflater.from(this);
+
+        View actionBar = mInflator.inflate(R.layout.custom_action_bar, null);
+        TextView mTitleTextView = (TextView)actionBar.findViewById(R.id.title_text);
+        mTitleTextView.setText("Modify");
+        mActionBar.setCustomView(actionBar);
+        mActionBar.setDisplayShowCustomEnabled(true);
+        ((Toolbar) actionBar.getParent()).setContentInsetsAbsolute(0,0);
+
+        bmb = (BoomMenuButton) actionBar.findViewById(R.id.action_bar_right_bmb);
+        bmb.setButtonEnum(ButtonEnum.Ham);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.HAM_3);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.HAM_3);
+
+        extractFromFile = new ExtractFromFile();
         profiles = new Profiles();
 
         startTime = (Button) findViewById(R.id.start_time);
@@ -64,7 +93,7 @@ public class EditProfileActivity extends AppCompatActivity{
         imageView = (ImageView)findViewById(R.id.imageView);
         circularImageView = (CircularImageView)findViewById(R.id.circle_icon);
 
-        bmb = (BoomMenuButton)findViewById(R.id.bmb);
+       // bmb = (BoomMenuButton)findViewById(R.id.bmb);
 
         for (int i = 0; i < checkBoxIDS.length; i++) {
             checkBoxes[i] = (CheckBox) findViewById(checkBoxIDS[i]);
@@ -75,6 +104,8 @@ public class EditProfileActivity extends AppCompatActivity{
                     .normalImageRes(imgeRes[i])
                     .normalTextRes(stringIds[i])
                     .subNormalTextRes(stringIdTxts[i])
+                   // .normalColor(Color.WHITE)
+                   // .normalTextColor(Color.DKGRAY)
                     .listener(new OnBMClickListener() {
                         @Override
                         public void onBoomButtonClick(int index) {
@@ -93,6 +124,10 @@ public class EditProfileActivity extends AppCompatActivity{
                                     overridePendingTransition(R.anim.bottom_in,R.anim.top_out);
                                     break;
                                 case 2 :
+                                    Intent intent1 = new Intent(EditProfileActivity.this,ToDoList.class);
+                                    intent1.putExtra("profile",profiles);
+                                    startActivityForResult(intent1,4);
+                                    overridePendingTransition(R.anim.bottom_in,R.anim.top_out);
                                     break;
                             }
                         }
@@ -158,7 +193,7 @@ public class EditProfileActivity extends AppCompatActivity{
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(EditProfileActivity.this, "Long press on image, to add your own icon!", Toast.LENGTH_LONG).show();
+                Toast.makeText(EditProfileActivity.this, "Long press on image, to customize background!", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -236,8 +271,8 @@ public class EditProfileActivity extends AppCompatActivity{
                     Toast.makeText(EditProfileActivity.this, profiles.getProfile(), Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(EditProfileActivity.this,ProfilePictureDialogActivity.class);
                     i.putExtra("profile",profiles);
-                    startActivityForResult(i,4);
                     i.putExtra("isIcon",true);
+                    startActivityForResult(i,4);
                 }
                 return true;
             }
@@ -316,7 +351,8 @@ public class EditProfileActivity extends AppCompatActivity{
                 }
                 if(editProfile) {
                     profileNames.renameProfileName(profileName, position);
-                    delFile(oldProfileName);
+                    //delFile(oldProfileName);
+                    extractFromFile.delProfile(oldProfileName,EditProfileActivity.this);
                 }
                 else {
                     profileNames.SetProfileNames(profileName);
@@ -341,8 +377,10 @@ public class EditProfileActivity extends AppCompatActivity{
 
                 setTimeMethod(hourOfDay_start,minute_start,NotificationSilenceReciever.class,"com.example.shivangipandey.notificationoff.NotificationSilenceReciever",profiles.getPendingIntentSilenceId());
 
-                makeListSerializable(profileNames);
-                makeProfileObjSerializable(profileName,profiles);
+          //      makeListSerializable(profileNames);
+                extractFromFile.serializeProfileNameList(profileNames,EditProfileActivity.this);
+              // makeProfileObjSerializable(profileName,profiles);
+                extractFromFile.serializeProfiles(profileName,profiles,EditProfileActivity.this);
                 returnMain();
             }
 
@@ -363,7 +401,7 @@ public class EditProfileActivity extends AppCompatActivity{
         startActivity(i);
         finish();
     }
-    private void makeProfileObjSerializable(String proName,Profiles profile){
+  /*  private void makeProfileObjSerializable(String proName,Profiles profile){
         try {
             File outputFile = new File(getFilesDir(),proName+".ser");
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(outputFile));
@@ -383,12 +421,12 @@ public class EditProfileActivity extends AppCompatActivity{
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
-   private void delFile(String oldName){
+  /* private void delFile(String oldName){
        File profileFile = new File(getFilesDir().getAbsolutePath(),oldName+"ser");
         profileFile.delete();
-   }
+   }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -431,6 +469,7 @@ public class EditProfileActivity extends AppCompatActivity{
     }
 
     private void setTimeMethod(int hourOfDay, int minute, Class<?> cls, String action, int piID){
+        new Session(this).setEnabled(true,profiles.getProfile());
         boolean flag = false;
         Toast.makeText(this, "time set for "+hourOfDay+":"+minute, Toast.LENGTH_SHORT).show();
         Calendar midnightCalender = Calendar.getInstance();
@@ -456,9 +495,8 @@ public class EditProfileActivity extends AppCompatActivity{
 
         Intent intent = new Intent(this,cls);
         intent.setAction(action);
-        intent.putExtra("profiles",profiles);
+        intent.putExtra("profiles",profiles.getProfile());
         PendingIntent midPI = PendingIntent.getBroadcast(this,piID,intent,PendingIntent.FLAG_CANCEL_CURRENT);
-        intent.putExtra("pendingIntObj",midPI);
         am.setRepeating(AlarmManager.RTC_WAKEUP,midnightCalender.getTimeInMillis(),AlarmManager.INTERVAL_DAY,midPI);
 
         if(flag)

@@ -33,12 +33,14 @@ public class MainActivity extends AppCompatActivity{
     ProfileNames profileNames = null;
     ListView listView;
     TextView empty;
+    ExtractFromFile extractFromFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        extractFromFile = new ExtractFromFile();
         midnightAlarmStart();
 
         listView = (ListView) findViewById(R.id.profileListView);
@@ -46,7 +48,8 @@ public class MainActivity extends AppCompatActivity{
         empty = (TextView)findViewById(R.id.empty);
         listView.setEmptyView(empty);
 
-        profileNames = getSerializedList();
+        //profileNames = getSerializedList();
+        profileNames = extractFromFile.deserializedProfileNamesList(MainActivity.this);
 
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +87,7 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-    private Profiles getSerializedProfile(String profileName){
+ /*   private Profiles getSerializedProfile(String profileName){
         ObjectInputStream in = null;
         Profiles p = null;
         try {
@@ -110,7 +113,7 @@ public class MainActivity extends AppCompatActivity{
             return null;
         }
         return p;
-    }
+    }*/
 
     private void deleteProfile(final ProfileNames profileNames,final Profiles profiles){
         AlertDialog.Builder builder = new  AlertDialog.Builder(MainActivity.this);
@@ -121,6 +124,7 @@ public class MainActivity extends AppCompatActivity{
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cancelIntents(profiles);
+                        new Session(MainActivity.this).setEnabled(false,profiles.getProfile());
                         new Session(MainActivity.this).setProfileActive(false,profiles.getProfile());
                         new ActiveProfiles(MainActivity.this).deleteValue(profiles.getProfile());
                         delete(profiles.getProfile(),profileNames);
@@ -136,7 +140,8 @@ public class MainActivity extends AppCompatActivity{
 
         if (!arrayList.isEmpty()) {
             for (int i = 0; i < arrayList.size(); i++) {
-                profilesArrayList.add(getSerializedProfile(arrayList.get(i)));
+               // profilesArrayList.add(getSerializedProfile(arrayList.get(i)));
+                profilesArrayList.add(extractFromFile.deserializeProfile(arrayList.get(i),MainActivity.this));
             }
             customAdapter cusAdap = new customAdapter(MainActivity.this, R.layout.profile_listview_item, profilesArrayList);
             listView.setAdapter(cusAdap);
@@ -144,28 +149,26 @@ public class MainActivity extends AppCompatActivity{
     }
     private void delete(String name,ProfileNames profileNames){
         profileNames.removeProfileName(name);
-        try {
-            File profileFile = new File(getFilesDir().getAbsolutePath(),name+"ser");
-            profileFile.delete();
-            File outputFile = new File(getFilesDir(),"profileNames");
+            extractFromFile.delProfile(name,MainActivity.this);
+           // File profileFile = new File(getFilesDir().getAbsolutePath(),name+"ser");
+           // profileFile.delete();
+            extractFromFile.serializeProfileNameList(profileNames,MainActivity.this);
+          /*  File outputFile = new File(getFilesDir(),"profileNames");
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(outputFile));
             out.writeObject(profileNames);
-            out.close();
+            out.close();*/
             Intent intent = new Intent(MainActivity.this,MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
     private void cancelIntents(Profiles profiles){
 
         AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 
         Intent i = new Intent(getApplicationContext(),UnsilenceNotifications.class);
-        i.putExtra("profiles",profiles);
+        i.putExtra("profiles",profiles.getProfile());
         Intent i2 = new Intent(getApplicationContext(),NotificationSilenceReciever.class);
-        i2.putExtra("profiles",profiles);
+        i2.putExtra("profiles",profiles.getProfile());
         i.setAction("com.example.shivangipandey.notificationoff.UnsilenceNotificationReciever");
         i2.setAction("com.example.shivangipandey.notificationoff.NotificationSilenceReciever");
         PendingIntent midPI = PendingIntent.getBroadcast(getApplicationContext(),profiles.getPendingIntentUnSilenceId(),i,PendingIntent.FLAG_NO_CREATE);
@@ -190,15 +193,21 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void midnightAlarmStart(){
-       PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0,new Intent(Intent.ACTION_BOOT_COMPLETED),PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent i = new Intent(this,BootUpReciever.class);
+       PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0,i,PendingIntent.FLAG_NO_CREATE);
+        if(pendingIntent == null)
+            pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0,i,PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
         Calendar calendar = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.HOUR, 0);
         calendar.set(Calendar.AM_PM, Calendar.AM);
 
+        if(calendar.before(cal))
+            calendar.add(Calendar.DAY_OF_MONTH,1);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
     }
 }

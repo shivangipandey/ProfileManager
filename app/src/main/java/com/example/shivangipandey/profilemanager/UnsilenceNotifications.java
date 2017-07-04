@@ -30,10 +30,24 @@ public class UnsilenceNotifications extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
 
-            session = new Session(context);
-        profiles = (Profiles)intent.getSerializableExtra("profiles");
+        ExtractFromFile extractFromFile = new ExtractFromFile();
+        session = new Session(context);
+        String profileName = intent.getStringExtra("profiles");
+        if(profileName == null){
+            Toast.makeText(context,"Restart your App", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        profiles = extractFromFile.deserializeProfile(profileName,context);
+        //String pro = intent.getStringExtra("profiles");
+
+        if(profiles == null){
+            Toast.makeText(context,"Restart your App", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        String profileName = profiles.getProfile();
+        profileName = profiles.getProfile();
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         ActiveProfiles activeProfiles = new ActiveProfiles(context);
         String preProfileName;

@@ -30,9 +30,19 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
     Session session;
     @Override
     public void onReceive(Context context, Intent intent) {
+        ExtractFromFile extractFromFile = new ExtractFromFile();
         boolean flag1 = true;
         session = new Session(context);
-        profiles = (Profiles)intent.getSerializableExtra("profiles");
+        profileName = intent.getStringExtra("profiles");
+        if(profileName == null){
+                Toast.makeText(context,"ProfilesName = null in nottificationSilenceReciever",Toast.LENGTH_SHORT).show();
+                return;
+        }
+        profiles = extractFromFile.deserializeProfile(profileName,context);
+        if(profiles == null){
+            Toast.makeText(context,"Profiles = null in nottificationSilenceReciever",Toast.LENGTH_SHORT).show();
+            return;
+        }
         profileName = profiles.getProfile();
 
         if(checkForDays()) {
@@ -186,7 +196,7 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
     private void startNotification(Context context){
 
         Intent i = new Intent(context,NotificationSilenceReciever.class);
-        i.putExtra("profiles",profiles);
+        i.putExtra("profiles",profileName);
         i.putExtra("FLAGG",true);
 
         PendingIntent pi = PendingIntent.getBroadcast(context,0,i,PendingIntent.FLAG_CANCEL_CURRENT);
@@ -221,9 +231,8 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancel(profiles.getPendingIntentSilenceId());
-        session.setProfileActive(false,profileName);
         Intent i = new Intent("com.example.shivangipandey.notificationoff.UnsilenceNotificationReciever");
-        i.putExtra("profiles",profiles);
+        i.putExtra("profiles",profileName);
         context.sendBroadcast(i);
 
     }
@@ -238,6 +247,7 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
         Toast.makeText(context, "End time set for "+hourOfDay+":"+minute, Toast.LENGTH_SHORT).show();
         Calendar midnightCalender = Calendar.getInstance();
         Calendar now = Calendar.getInstance();
+        midnightCalender.set(Calendar.SECOND,0);
         midnightCalender.set(Calendar.HOUR_OF_DAY,hourOfDay);
         midnightCalender.set(Calendar.MINUTE,minute);
         if(midnightCalender.before(now))
@@ -247,9 +257,11 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
 
         Intent intent = new Intent(context,cls);
         intent.setAction(action);
-        intent.putExtra("profiles",profiles);
+        intent.putExtra("profiles",profileName);
+       // intent.putExtra("profiles","hey");
+
         PendingIntent midPI = PendingIntent.getBroadcast(context,piID,intent,PendingIntent.FLAG_CANCEL_CURRENT);
-        intent.putExtra("pendingIntObj",midPI);
+    //    intent.putExtra("pendingIntObj",midPI);
         am.setRepeating(AlarmManager.RTC_WAKEUP,midnightCalender.getTimeInMillis(),AlarmManager.INTERVAL_DAY,midPI);
 
     }

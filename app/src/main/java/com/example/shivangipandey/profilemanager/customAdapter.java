@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +55,7 @@ public class customAdapter extends ArrayAdapter<Profiles> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable final View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable final View convertView, @NonNull ViewGroup parent) {
 
         View listItemView = convertView;
 
@@ -82,29 +83,43 @@ public class customAdapter extends ArrayAdapter<Profiles> {
         profilePicture.setAnimation(zoomin);
         circularImageView = (CircularImageView)listItemView.findViewById(R.id.circle_icon);
 
+       // int position1 = position;
         boolean flag = checkSilenceIntent(profiles);
+        //boolean flag = new Session(context).getEnabled(profiles.getProfile());
+        boolean flag2 = aSwitch.isChecked();
+        aSwitch.setOnCheckedChangeListener(null);
         aSwitch.setChecked(flag);
 
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    int hourOfDay_start = profiles.getStartHour();
-                    int minute_start = profiles.getStartMin();
-                    AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-                    Intent i = new Intent(context.getApplicationContext(),UnsilenceNotifications.class);
-                    i.setAction("com.example.shivangipandey.notificationoff.UnsilenceNotificationReciever");
-                    PendingIntent midPI = PendingIntent.getBroadcast(context.getApplicationContext(),profiles.getPendingIntentUnSilenceId(),i,PendingIntent.FLAG_NO_CREATE);
-                    if(midPI != null) {
-                        midPI.cancel();
-                        am.cancel(midPI);
-                        new Session(context).setProfileActive(false,profiles.getProfile());
-                        new ActiveProfiles(context).deleteValue(profiles.getProfile());
+         //           int position1 = position;
+           //         Log.e("pos","                         "+position);
+                   // aSwitch.setChecked(true);
+                    if(!checkSilenceIntent(profiles)) {
+                        new Session(context).setEnabled(true, profiles.getProfile());
+                        int hourOfDay_start = profiles.getStartHour();
+                        int minute_start = profiles.getStartMin();
+                        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                        Intent i = new Intent(context, UnsilenceNotifications.class);
+                        i.setAction("com.example.shivangipandey.notificationoff.UnsilenceNotificationReciever");
+                        PendingIntent midPI = PendingIntent.getBroadcast(context.getApplicationContext(), profiles.getPendingIntentUnSilenceId(), i, PendingIntent.FLAG_NO_CREATE);
+                        if (midPI != null) {
+                            am.cancel(midPI);
+                            midPI.cancel();
+                            new Session(context).setProfileActive(false, profiles.getProfile());
+                            new ActiveProfiles(context).deleteValue(profiles.getProfile());
+                        }
+                        setTimeMethod(hourOfDay_start, minute_start, NotificationSilenceReciever.class, "com.example.shivangipandey.notificationoff.NotificationSilenceReciever", profiles.getPendingIntentSilenceId(), profiles);
+                        Toast.makeText(context, "Alarm enabled", Toast.LENGTH_SHORT).show();
                     }
-                    setTimeMethod(hourOfDay_start,minute_start,NotificationSilenceReciever.class,"com.example.shivangipandey.notificationoff.NotificationSilenceReciever",profiles.getPendingIntentSilenceId(),profiles);
-                    Toast.makeText(context,"Alarm enabled", Toast.LENGTH_SHORT).show();
                 }
                 else{
+                   // aSwitch.setChecked(false);
+             //       int position1 = position;
+               //     Log.e("pos","        unchecked                   "+position);
+                    new Session(context).setEnabled(false,profiles.getProfile());
                     cancelIntents(profiles);
                 }
             }
@@ -197,9 +212,8 @@ public class customAdapter extends ArrayAdapter<Profiles> {
         AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context,cls);
         intent.setAction(action);
-        intent.putExtra("profiles",profiles);
+        intent.putExtra("profiles",profiles.getProfile());
         PendingIntent midPI1 = PendingIntent.getBroadcast(context,piID,intent,PendingIntent.FLAG_CANCEL_CURRENT);
-        intent.putExtra("pendingIntObj",midPI1);
         am.setRepeating(AlarmManager.RTC_WAKEUP,midnightCalender.getTimeInMillis(),AlarmManager.INTERVAL_DAY,midPI1);
 
         if(flag)
@@ -211,14 +225,14 @@ public class customAdapter extends ArrayAdapter<Profiles> {
 
         AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 
-        Intent i = new Intent(context.getApplicationContext(),UnsilenceNotifications.class);
-        i.putExtra("profiles",profiles);
-        Intent i2 = new Intent(context.getApplicationContext(),NotificationSilenceReciever.class);
-        i2.putExtra("profiles",profiles);
+        Intent i = new Intent(context,UnsilenceNotifications.class);
+        i.putExtra("profiles",profiles.getProfile());
+        Intent i2 = new Intent(context,NotificationSilenceReciever.class);
+        i2.putExtra("profiles",profiles.getProfile());
         i.setAction("com.example.shivangipandey.notificationoff.UnsilenceNotificationReciever");
         i2.setAction("com.example.shivangipandey.notificationoff.NotificationSilenceReciever");
-        PendingIntent midPI = PendingIntent.getBroadcast(context.getApplicationContext(),profiles.getPendingIntentUnSilenceId(),i,PendingIntent.FLAG_NO_CREATE);
-        PendingIntent midPI2 = PendingIntent.getBroadcast(context.getApplicationContext(),profiles.getPendingIntentSilenceId(),i2,PendingIntent.FLAG_NO_CREATE);
+        PendingIntent midPI = PendingIntent.getBroadcast(context,profiles.getPendingIntentUnSilenceId(),i,PendingIntent.FLAG_NO_CREATE);
+        PendingIntent midPI2 = PendingIntent.getBroadcast(context,profiles.getPendingIntentSilenceId(),i2,PendingIntent.FLAG_NO_CREATE);
         if(midPI != null){
             am.cancel(midPI);
             midPI.cancel();
@@ -237,7 +251,7 @@ public class customAdapter extends ArrayAdapter<Profiles> {
     }
     private boolean checkSilenceIntent(Profiles profiles){
         Intent i2 = new Intent(context,NotificationSilenceReciever.class);
-        i2.putExtra("profiles",profiles);
+    //    i2.putExtra("profiles",profiles);
         i2.setAction("com.example.shivangipandey.notificationoff.NotificationSilenceReciever");
         PendingIntent midPI2 = PendingIntent.getBroadcast(context,profiles.getPendingIntentSilenceId(),i2,PendingIntent.FLAG_NO_CREATE);
         return midPI2 != null;

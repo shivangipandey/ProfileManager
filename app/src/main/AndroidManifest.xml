@@ -52,15 +52,18 @@
         <activity
             android:name=".modeDialogActivity"
             android:label="Select modes"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+            android:theme="@style/AppCompatAlertDialogStyle" />
         <activity
             android:name=".ProfilePictureDialogActivity"
             android:label="Select picture"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+            android:theme="@style/AppCompatAlertDialogStyle" />
         <activity
             android:name=".VolumeActivity"
             android:label="Set volume"
-            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+            android:theme="@style/AppCompatAlertDialogStyle" />
+        <activity android:name=".ToDoList"
+            android:label="Add work in to do list"
+            android:theme="@style/AppCompatAlertDialogStyle"></activity>
     </application>
 
 </manifest>

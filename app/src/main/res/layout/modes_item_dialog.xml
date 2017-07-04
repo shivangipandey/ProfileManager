@@ -2,16 +2,36 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="20dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:weightSum="1">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorAccent"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set Mode"
+            android:background="@color/colorAccent"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"/>
+
+    </android.support.v7.widget.Toolbar>
+
     <LinearLayout
+        android:layout_below="@id/my_toolbar"
         android:id="@+id/ll"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="10dp">
+        android:layout_margin="20dp">
         <CheckBox
             android:id="@+id/ringer_checkbox"
             android:layout_width="wrap_content"
@@ -60,8 +80,9 @@
         android:id="@+id/okButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
         android:text="OK?"
+        android:layout_below="@+id/ll"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/ll"
         />
 </RelativeLayout>

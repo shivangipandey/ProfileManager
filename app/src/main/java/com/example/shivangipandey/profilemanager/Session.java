@@ -23,11 +23,15 @@ public class Session {
         sharedPreferences = context.getSharedPreferences("shivangi_pandey9798_sharedprefs",Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
-
     public void setProfile(String profile){
         editor.putString("profile",profile);
         editor.apply();
     }
+    public void setEnabled(boolean setEnable,String profile){
+        editor.putBoolean("isEnable"+profile,setEnable);
+        editor.apply();
+    }
+
     public void setCurruntMode(int curruntProfile,String profile){
         editor.putInt("currentState"+profile,curruntProfile);
         editor.apply();
@@ -68,6 +72,9 @@ public class Session {
     }
     public int getCurrentMode(String profile){
         return sharedPreferences.getInt("currentState"+profile, NotificationManager.INTERRUPTION_FILTER_ALL);
+    }
+    public boolean getEnabled(String profile){
+        return sharedPreferences.getBoolean("isEnable"+profile,false);
     }
     public int getCurrentringerMode(String profile){
         return sharedPreferences.getInt("currentRingerMode"+profile, AudioManager.RINGER_MODE_NORMAL);
