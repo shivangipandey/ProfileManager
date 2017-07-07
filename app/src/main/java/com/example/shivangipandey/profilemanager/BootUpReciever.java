@@ -141,7 +141,7 @@ public class BootUpReciever extends BroadcastReceiver {
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.HOUR, 2);
         calendar.set(Calendar.AM_PM, Calendar.AM);
 
         if(calendar.before(cal))

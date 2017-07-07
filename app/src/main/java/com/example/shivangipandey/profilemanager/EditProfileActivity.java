@@ -63,7 +63,7 @@ public class EditProfileActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        ActionBar mActionBar = getSupportActionBar();
+     /*   ActionBar mActionBar = getSupportActionBar();
         assert mActionBar != null;
         mActionBar.setDisplayShowHomeEnabled(false);
         mActionBar.setDisplayShowTitleEnabled(false);
@@ -74,9 +74,9 @@ public class EditProfileActivity extends AppCompatActivity{
         mTitleTextView.setText("Modify");
         mActionBar.setCustomView(actionBar);
         mActionBar.setDisplayShowCustomEnabled(true);
-        ((Toolbar) actionBar.getParent()).setContentInsetsAbsolute(0,0);
+        ((Toolbar) actionBar.getParent()).setContentInsetsAbsolute(0,0);*/
 
-        bmb = (BoomMenuButton) actionBar.findViewById(R.id.action_bar_right_bmb);
+        bmb = (BoomMenuButton)findViewById(R.id.action_bar_right_bmb);
         bmb.setButtonEnum(ButtonEnum.Ham);
         bmb.setPiecePlaceEnum(PiecePlaceEnum.HAM_3);
         bmb.setButtonPlaceEnum(ButtonPlaceEnum.HAM_3);
@@ -317,8 +317,8 @@ public class EditProfileActivity extends AppCompatActivity{
                     return;
                 }
                 else{
-                    if(profileName.length() > 10){
-                        Toast.makeText(EditProfileActivity.this,"Profile name must be under 10 characters limit.", Toast.LENGTH_SHORT).show();
+                    if(profileName.length() > 20){
+                        Toast.makeText(EditProfileActivity.this,"Profile name must be under 20 characters limit.", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if(editProfile) {

@@ -11,7 +11,10 @@
         android:background="?attr/colorAccent"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <TextView
             android:layout_width="match_parent"
@@ -28,105 +31,105 @@
         android:layout_below="@id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ringer"
-        android:drawableLeft="@drawable/ic_volume_up_black_24dp"
-        android:drawablePadding="10dp"
-        />
-    <SeekBar
-        android:background="?selectableItemBackgroundBorderless"
-        android:id="@+id/ringer_seekBar"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="50dp"
-        android:layout_marginTop="20dp"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Media"
-        android:drawableLeft="@drawable/ic_music_note_black_24dp"
-        android:drawablePadding="10dp"
-        />
-    <SeekBar
-        android:background="?selectableItemBackgroundBorderless"
-        android:id="@+id/media_seekBar"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="50dp"
-        android:layout_marginTop="20dp"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Alarm"
-        android:drawableLeft="@drawable/ic_access_alarm_black_24dp"
-        android:drawablePadding="10dp"
-        />
-    <SeekBar
-        android:background="?selectableItemBackgroundBorderless"
-        android:id="@+id/alarm_seekBar"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="50dp"
-        android:layout_marginTop="20dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="System"
-        android:drawableLeft="@drawable/ic_system_update_black_24dp"
-        android:drawablePadding="10dp"
-        />
-    <SeekBar
-        android:background="?selectableItemBackgroundBorderless"
-        android:id="@+id/system_seekBar"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="50dp"
-        android:layout_marginTop="20dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Voice Call"
-        android:drawableLeft="@drawable/ic_call_black_24dp"
-        android:drawablePadding="10dp"
-        />
-    <SeekBar
-        android:background="?selectableItemBackgroundBorderless"
-        android:id="@+id/voiceCall_seekBar"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="50dp"
-        android:layout_marginTop="20dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Notification"
-        android:drawableLeft="@drawable/ic_notifications_black_24dp"
-        android:drawablePadding="10dp"
-        />
-    <SeekBar
-        android:background="?selectableItemBackgroundBorderless"
-        android:id="@+id/notification_seekBar"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="200dp"
-        android:layout_marginTop="20dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ringer"
+                android:drawableLeft="@drawable/ic_volume_up_black_24dp"
+                android:drawablePadding="10dp"
+                />
+            <SeekBar
+                android:background="?selectableItemBackgroundBorderless"
+                android:id="@+id/ringer_seekBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="50dp"
+                android:layout_marginTop="20dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Media"
+                android:drawableLeft="@drawable/ic_music_note_black_24dp"
+                android:drawablePadding="10dp"
+                />
+            <SeekBar
+                android:background="?selectableItemBackgroundBorderless"
+                android:id="@+id/media_seekBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="50dp"
+                android:layout_marginTop="20dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alarm"
+                android:drawableLeft="@drawable/ic_access_alarm_black_24dp"
+                android:drawablePadding="10dp"
+                />
+            <SeekBar
+                android:background="?selectableItemBackgroundBorderless"
+                android:id="@+id/alarm_seekBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="50dp"
+                android:layout_marginTop="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="System"
+                android:drawableLeft="@drawable/ic_system_update_black_24dp"
+                android:drawablePadding="10dp"
+                />
+            <SeekBar
+                android:background="?selectableItemBackgroundBorderless"
+                android:id="@+id/system_seekBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="50dp"
+                android:layout_marginTop="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Voice Call"
+                android:drawableLeft="@drawable/ic_call_black_24dp"
+                android:drawablePadding="10dp"
+                />
+            <SeekBar
+                android:background="?selectableItemBackgroundBorderless"
+                android:id="@+id/voiceCall_seekBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="50dp"
+                android:layout_marginTop="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notification"
+                android:drawableLeft="@drawable/ic_notifications_black_24dp"
+                android:drawablePadding="10dp"
+                />
+            <SeekBar
+                android:background="?selectableItemBackgroundBorderless"
+                android:id="@+id/notification_seekBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="200dp"
+                android:layout_marginTop="20dp"/>
 
-    </LinearLayout>
+        </LinearLayout>
     </ScrollView>
     <LinearLayout
         android:layout_width="wrap_content"
@@ -134,13 +137,13 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         >
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_volume"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_done_white_24dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="30dp"
-        />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_volume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_done_white_24dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="30dp"
+            />
     </LinearLayout>
 </RelativeLayout>

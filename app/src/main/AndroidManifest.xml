@@ -26,7 +26,9 @@
         </activity>
         <activity
             android:name=".EditProfileActivity"
-            android:label="Modify" />
+            android:label="Modify"
+            android:theme="@style/AppTheme1"
+            android:windowSoftInputMode="stateHidden" />
 
         <receiver android:name=".NotificationSilenceReciever">
             <intent-filter>
@@ -61,9 +63,11 @@
             android:name=".VolumeActivity"
             android:label="Set volume"
             android:theme="@style/AppCompatAlertDialogStyle" />
-        <activity android:name=".ToDoList"
-            android:label="Add work in to do list"
-            android:theme="@style/AppCompatAlertDialogStyle"></activity>
+        <activity
+            android:name=".ToDoList"
+            android:label="Add work to do"
+            android:theme="@style/AppCompatAlertDialogStyle"
+            />
     </application>
 
 </manifest>

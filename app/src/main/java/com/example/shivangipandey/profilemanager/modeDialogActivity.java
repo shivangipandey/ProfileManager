@@ -114,7 +114,7 @@ public class modeDialogActivity extends AppCompatActivity {
                         && !checkBox[1].isChecked()
                         && !checkBox[2].isChecked()
                         && !checkBox[3].isChecked()){
-                    Toast.makeText(modeDialogActivity.this,"Choose atleast 1 mode", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Choose atleast 1 mode", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Intent i = new Intent();

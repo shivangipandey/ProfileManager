@@ -202,9 +202,10 @@ public class MainActivity extends AppCompatActivity{
         Calendar cal = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE,0);
+        calendar.set(Calendar.HOUR, 2);
         calendar.set(Calendar.AM_PM, Calendar.AM);
+      //calendar.add(Calendar.MINUTE,3);
 
         if(calendar.before(cal))
             calendar.add(Calendar.DAY_OF_MONTH,1);

@@ -27,7 +27,7 @@ public class VolumeActivity extends AppCompatActivity implements SeekBar.OnSeekB
         setContentView(R.layout.activity_volume);
 
         profiles = (Profiles)getIntent().getSerializableExtra("profile");
-        Toast.makeText(this, profiles.getProfile(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), profiles.getProfile(), Toast.LENGTH_SHORT).show();
 
         audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         for(int i=0;i<seekBar.length;i++) {

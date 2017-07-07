@@ -115,11 +115,14 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
                     Toast.makeText(context,"Do Not Disturb mode needs to be disabled to change the volume.", Toast.LENGTH_SHORT).show();
                 }
             }
-            if(flag)
-                for (int i = 0; i < volume.length; i++)
+            String pr = profileName;
+            if(flag){
+                for (int i = 1; i < volume.length; i++) {
                     audioManager.setStreamVolume(streams[i], volume[i], 0);
+                }
+                audioManager.setStreamVolume(streams[0],volume[0],0);
+            }
         }
-
         session.setRingerMode(audioManager.getRingerMode(), profileName);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -205,7 +208,7 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
                 .setSmallIcon(R.drawable.sleep)
                 .setContentTitle(profileName)
                 .setContentText(profileName+" activated")
-                .addAction(R.mipmap.ic_launcher,"press to stop",pi)
+                .addAction(R.drawable.ic_block_black_24dp,"press to stop",pi)
                 .setAutoCancel(true);
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

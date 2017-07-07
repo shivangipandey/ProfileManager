@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.shivangipandey.profilemanager.EditProfileActivity">
 
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <RelativeLayout
-        android:gravity="center|bottom"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+    <RelativeLayout
+        android:id="@+id/imageRelativeLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
@@ -18,6 +29,12 @@
             android:background="?selectableItemBackgroundBorderless"
             android:src="@drawable/blurry4"
             android:layout_centerHorizontal="true"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/white"
+            android:layout_below="@id/imageView"
             />
 
         <com.mikhaellopez.circularimageview.CircularImageView
@@ -34,40 +51,39 @@
             app:civ_shadow="true"
             app:civ_shadow_radius="10"
             app:civ_shadow_color="#8BC34A"/>
-
-        <LinearLayout
+        <EditText
+            android:id="@+id/profileNameEditText"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="3dp"
             android:layout_below="@id/circle_icon"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
+            android:paddingLeft="10dp"
             android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/circle_background"
+            android:hint="Profile Name"
+            android:layout_toLeftOf="@+id/action_bar_right_bmb"
+            android:layout_toStartOf="@+id/action_bar_right_bmb" />
+
+        <com.nightonke.boommenu.BoomMenuButton
+            android:id="@+id/action_bar_right_bmb"
+            android:layout_width="wrap_content"
+            android:layout_below="@id/circle_icon"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:id="@+id/linearLayout">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:layout_height="match_parent"
-            android:text="Profile Set For :"
-            android:id="@+id/textView" />
-
-            <EditText
-                android:id="@+id/profileNameEditText"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:hint="Profile Name" />
-
-        </LinearLayout>
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="-5dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/circle_enabled_resource"
+            app:bmb_backgroundEffect="false"
+            app:bmb_boomEnum="boomParabola_3" />
+    </RelativeLayout>
     <RelativeLayout
-        android:id="@+id/relativeLayout"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/linearLayout">
-
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_below="@id/imageRelativeLayout"
+        android:id="@+id/relativeLayoutTop">
         <TextView
             android:id="@+id/label"
             android:layout_width="match_parent"
@@ -77,7 +93,9 @@
             android:textSize="25sp"
             android:textColor="#18E9D6"
             android:background="@android:color/white"
-            />
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
         <LinearLayout
             android:layout_below="@id/label"
@@ -165,7 +183,10 @@
             android:orientation="horizontal"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
-            android:paddingTop="10dp">
+            android:layout_marginTop="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:background="@drawable/circle_background">
             <CheckBox
                 android:id="@+id/sunday"
                 android:layout_width="0dp"
@@ -245,39 +266,62 @@
                 />
         </LinearLayout>
     </RelativeLayout>
+</RelativeLayout>
+    </ScrollView>
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+         />
+    <RelativeLayout
+        android:id="@+id/endLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:text="save"
+        android:layout_alignParentBottom="true"
+        android:background="#18E9D6"
+        >
+        <Button
+            android:background="?selectableItemBackgroundBorderless"
+            android:id="@+id/saveProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Ok"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:drawableRight="@drawable/ok"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/view2"
+            android:layout_toStartOf="@+id/view2" />
 
-            <Button
-                android:id="@+id/saveProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:drawableRight="@drawable/ic_done_black_24dp"
-                android:drawablePadding="-10dp"
-                android:text="save"
-                android:layout_below="@+id/relativeLayout"
-                android:layout_alignLeft="@+id/cancelProfile"
-                android:layout_alignStart="@+id/cancelProfile"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="20dp" />
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/view2" />
 
-            <Button
-                android:layout_marginLeft="10dp"
-                android:background="?selectableItemBackground"
-                android:id="@+id/cancelProfile"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:drawableLeft="@drawable/ic_keyboard_backspace_black_24dp"
-               />
-
-        <!--<com.nightonke.boommenu.BoomMenuButton-->
-            <!--android:layout_below="@id/relativeLayout"-->
-            <!--android:id="@+id/bmb"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--app:bmb_buttonEnum="ham"-->
-            <!--app:bmb_piecePlaceEnum="piecePlace_ham_3"-->
-            <!--app:bmb_buttonPlaceEnum="buttonPlace_ham_3"-->
-            <!--android:layout_marginRight="10dp"-->
-            <!--android:layout_alignParentRight="true"/>-->
+        <Button
+            android:background="?selectableItemBackgroundBorderless"
+            android:id="@+id/cancelProfile"
+            android:layout_width="wrap_content"
+            android:textStyle="bold"
+            android:text="Cancel"
+            android:textColor="@android:color/white"
+            android:drawableRight="@drawable/cancel"
+            android:textAllCaps="false"
+            android:layout_height="40dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/view2"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
-</ScrollView>
+</RelativeLayout>
 

@@ -80,8 +80,10 @@ public class UnsilenceNotifications extends BroadcastReceiver{
                         }
                     }
                     if(flag)
-                        for (int i = 0; i < volume.length; i++)
+                        for (int i = 1; i < volume.length; i++) {
                             audioManager.setStreamVolume(streams[i], volume[i], 0);
+                        }
+                        audioManager.setStreamVolume(streams[0],volume[0],0);
                 }
 
             }
@@ -168,9 +170,12 @@ public class UnsilenceNotifications extends BroadcastReceiver{
                         Toast.makeText(context, "Do Not Disturb mode needs to be disabled to change the volume.", Toast.LENGTH_SHORT).show();
                     }
                 }
-                if (flag)
-                    for (int i = 0; i < volume.length; i++)
+                if (flag) {
+                    for (int i = 1; i < volume.length; i++)
                         audioManager.setStreamVolume(streams[i], volume[i], 0);
+                    audioManager.setStreamVolume(streams[0],volume[0],0);
+                }
+
             }
         }
     }
