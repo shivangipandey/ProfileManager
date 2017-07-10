@@ -27,7 +27,12 @@ public class VolumeActivity extends AppCompatActivity implements SeekBar.OnSeekB
         setContentView(R.layout.activity_volume);
 
         profiles = (Profiles)getIntent().getSerializableExtra("profile");
-        Toast.makeText(getApplicationContext(), profiles.getProfile(), Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getApplicationContext(), profiles.getProfile(), Toast.LENGTH_SHORT).show();
+
+        if(profiles == null){
+            Toast.makeText(getApplicationContext(),"Restart the application.",Toast.LENGTH_LONG).show();
+            return;
+        }
 
         audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         for(int i=0;i<seekBar.length;i++) {
@@ -39,6 +44,10 @@ public class VolumeActivity extends AppCompatActivity implements SeekBar.OnSeekB
             volume = profiles.getvolumes();
             for(int i =0;i<volume.length;i++)
                 seekBar[i].setProgress(volume[i]);
+        }
+        else {
+            volume[4] = audioManager.getStreamMaxVolume(streams[4]);
+            seekBar[4].setProgress(volume[4]);
         }
 
         for (int i=0;i<seekBar.length;i++){

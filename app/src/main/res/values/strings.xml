@@ -9,7 +9,7 @@
 
     <string name="mode">Mode</string>
     <string name="volume">Volume</string>
-    <string name="to_do_list">To do list</string>
+    <string name="to_do_list">Reminder</string>
 
     <string name="mode_Txt">Add profile modes.</string>
     <string name="volume_Txt">Customize volume.</string>

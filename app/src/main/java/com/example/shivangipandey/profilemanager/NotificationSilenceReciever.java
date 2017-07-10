@@ -12,6 +12,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
@@ -35,12 +36,12 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
         session = new Session(context);
         profileName = intent.getStringExtra("profiles");
         if(profileName == null){
-                Toast.makeText(context,"ProfilesName = null in nottificationSilenceReciever",Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,"Restart your application.",Toast.LENGTH_SHORT).show();
                 return;
         }
         profiles = extractFromFile.deserializeProfile(profileName,context);
         if(profiles == null){
-            Toast.makeText(context,"Profiles = null in nottificationSilenceReciever",Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,"Restart your application.",Toast.LENGTH_SHORT).show();
             return;
         }
         profileName = profiles.getProfile();
@@ -55,15 +56,25 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
                     AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
                     NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (session.getSDKVersion() >= Build.VERSION_CODES.M) {
                         if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                            flag1 = false;
                             Intent intent1 = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
                             intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intent1);
+                            if (intent1.resolveActivity(context.getPackageManager()) != null) {
+                                context.startActivity(intent1);
+                            }else {
+                                Toast.makeText(context,"Manually enable do not disturb in settings.",Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        while (!notificationManager.isNotificationPolicyAccessGranted())
+                        long startTime = System.currentTimeMillis();
+                        while (!notificationManager.isNotificationPolicyAccessGranted()){
                             flag1 = false;
-                        flag1 = true;
+                            if(System.currentTimeMillis() - startTime < 5000)
+                                break;
+                        }
+                        if(notificationManager.isNotificationPolicyAccessGranted())
+                            flag1 = true;
                     }
                     if(flag1)
                         setAllThings(context,notificationManager,audioManager);
@@ -71,7 +82,7 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
             }
             catch(Exception e){
                         e.printStackTrace();
-                        Toast.makeText(context, "Do not disturb can't be setup due to some internal error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "some internal error occurred", Toast.LENGTH_SHORT).show();
             }
             }
         else{
@@ -86,11 +97,15 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
 
         session.setProfile(profiles.getProfile());
         session.setProfileActive(true, profileName);
-        new ActiveProfiles(context).addValue(profileName);
+        ActiveProfiles activeProfiles = new ActiveProfiles(context);
+        if(activeProfiles.readFile() == null || activeProfiles.readFile().isEmpty())
+            session.setFirstProfile(profileName);
+        activeProfiles.addValue(profileName);
         session.setAlarmMode(false, profileName);
         session.setDoNotDisturbMode(false, profileName);
         session.setGeneralMode(false, profileName);
         session.setVibrationMode(false, profileName);
+
 
         int streams[] ={AudioManager.STREAM_RING,AudioManager.STREAM_MUSIC,AudioManager.STREAM_ALARM,AudioManager.STREAM_SYSTEM,AudioManager.STREAM_VOICE_CALL,AudioManager.STREAM_NOTIFICATION};
         int volume[] = new int[streams.length];
@@ -107,31 +122,19 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
 
         volume = profiles.getvolumes();
         if(volume!=null) {
-            boolean flag = true;
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if(notificationManager.getCurrentInterruptionFilter() == NotificationManager.INTERRUPTION_FILTER_NONE) {
-                    flag = false;
-                    Toast.makeText(context,"Do Not Disturb mode needs to be disabled to change the volume.", Toast.LENGTH_SHORT).show();
-                }
-            }
-            String pr = profileName;
-            if(flag){
                 for (int i = 1; i < volume.length; i++) {
                     audioManager.setStreamVolume(streams[i], volume[i], 0);
                 }
                 audioManager.setStreamVolume(streams[0],volume[0],0);
-            }
         }
         session.setRingerMode(audioManager.getRingerMode(), profileName);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (session.getSDKVersion() >= Build.VERSION_CODES.M) {
             session.setCurruntMode(notificationManager.getCurrentInterruptionFilter(), profileName);
         }
-
         if (profiles.getDoNotDisturbMode()) {
             session.setDoNotDisturbMode(true, profileName);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (session.getSDKVersion() >= Build.VERSION_CODES.M) {
                 notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
             } else
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
@@ -140,11 +143,18 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
             if (profiles.getGeneralMode()) {
                 session.setGeneralMode(true, profileName);
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                Toast.makeText(context, "general mode enabled", Toast.LENGTH_SHORT);
+                Toast.makeText(context, "general mode enabled", Toast.LENGTH_SHORT).show();
             } else {
-                if (profiles.getAlarmMode()) {
+                if (profiles.getVibrationMode()) {
+                    session.setVibrationMode(true, profileName);
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                    audioManager.setStreamVolume(AudioManager.STREAM_RING,0,0);
+                    audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION,0,0);
+                    Toast.makeText(context, "Vibration mode enabled", Toast.LENGTH_SHORT).show();
+                }
+                else if (profiles.getAlarmMode()) {
                     session.setAlarmMode(true, profileName);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (session.getSDKVersion() >= Build.VERSION_CODES.M) {
                         notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALARMS);
                     } else {
                         Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
@@ -158,20 +168,15 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
                         }
                         RingtoneManager.getRingtone(context, alert).setStreamType(AudioManager.STREAM_ALARM);
                     }
-                    Toast.makeText(context, "Everything accept alarms disabled", Toast.LENGTH_SHORT);
-                }
-                if (profiles.getVibrationMode()) {
-                    session.setVibrationMode(true, profileName);
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                    Toast.makeText(context, "Vibration mode enabled", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "alarm mode enabled", Toast.LENGTH_SHORT).show();
                 }
             }
-            if (!profiles.getGeneralMode() && !profiles.getVibrationMode()) {
+          /*  if (!profiles.getGeneralMode() && !profiles.getVibrationMode()) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL);
                 }
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-            }
+            }*/
         }
 
     }
@@ -187,7 +192,7 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
                     am.cancel(midPI);
                     midPI.cancel();
                     if(midPI == null)
-                     Toast.makeText(context,"Do not Disturb disabled in between.", Toast.LENGTH_SHORT).show();
+                     Toast.makeText(context,profiles.getProfile()+" disabled in between.", Toast.LENGTH_SHORT).show();
                 }
                 return true;
             }
@@ -197,6 +202,9 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
     }
 
     private void startNotification(Context context){
+
+        String[] works = profiles.getWorks();
+        boolean isChecked[] = profiles.getToDoListEnabled();
 
         Intent i = new Intent(context,NotificationSilenceReciever.class);
         i.putExtra("profiles",profileName);
@@ -212,7 +220,27 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
                 .setAutoCancel(true);
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = mBuilder.build();
+        Notification notification;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+            mBuilder.setStyle(inboxStyle);
+            boolean hasWork = false;
+            int count = 0;
+            for(int k = 0;k<works.length;k++){
+                if(isChecked[k]) {
+                    count++;
+                    inboxStyle.addLine(count+") "+works[k]);
+                    hasWork = true;
+                }
+            }
+            if(!hasWork)
+                inboxStyle.setBigContentTitle("No Reminders for "+profileName);
+            else {
+                inboxStyle.setBigContentTitle(profileName+" Reminders : ");
+            }
+        }
+
+        notification = mBuilder.build();
         notification.flags = Notification.FLAG_ONGOING_EVENT;
         mNotificationManager.notify(profiles.getPendingIntentSilenceId(),notification);
 
@@ -247,7 +275,7 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
     }
 
     private void setTimeMethod(int hourOfDay, int minute, Class<?> cls, String action, int piID,Context context){
-        Toast.makeText(context, "End time set for "+hourOfDay+":"+minute, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(context, "End time set for "+hourOfDay+":"+minute, Toast.LENGTH_SHORT).show();
         Calendar midnightCalender = Calendar.getInstance();
         Calendar now = Calendar.getInstance();
         midnightCalender.set(Calendar.SECOND,0);
@@ -268,5 +296,4 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
         am.setRepeating(AlarmManager.RTC_WAKEUP,midnightCalender.getTimeInMillis(),AlarmManager.INTERVAL_DAY,midPI);
 
     }
-
 }

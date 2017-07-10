@@ -4,17 +4,21 @@
     android:installLocation="internalOnly">
 
     <!-- permission required to use Alarm Manager -->
+
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/icon"
+        android:icon="@drawable/icon2"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/icon"
+        android:roundIcon="@drawable/icon2"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
@@ -66,8 +70,11 @@
         <activity
             android:name=".ToDoList"
             android:label="Add work to do"
-            android:theme="@style/AppCompatAlertDialogStyle"
-            />
+            android:theme="@style/AppCompatAlertDialogStyle" />
+        <activity android:name=".IntroActivity"></activity>
+
+        <service android:name=".OnCheckService"></service>
+
     </application>
 
 </manifest>

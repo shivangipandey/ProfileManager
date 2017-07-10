@@ -5,11 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
     tools:context="com.example.shivangipandey.profilemanager.EditProfileActivity">
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="52dp"
+        android:layout_alignParentBottom="true"
         android:layout_height="wrap_content">
     <RelativeLayout
     android:layout_width="wrap_content"
@@ -60,6 +65,7 @@
             android:paddingLeft="10dp"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:layout_marginRight="4dp"
             android:background="@drawable/circle_background"
             android:hint="Profile Name"
             android:layout_toLeftOf="@+id/action_bar_right_bmb"
@@ -74,7 +80,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="-5dp"
             android:layout_alignParentRight="true"
-            android:background="@drawable/circle_enabled_resource"
+            android:background="@drawable/circle"
             app:bmb_backgroundEffect="false"
             app:bmb_boomEnum="boomParabola_3" />
     </RelativeLayout>
@@ -289,7 +295,7 @@
             android:background="?selectableItemBackgroundBorderless"
             android:id="@+id/saveProfile"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:text="Ok"
             android:textStyle="bold"
             android:textColor="@android:color/white"
@@ -316,7 +322,7 @@
             android:textColor="@android:color/white"
             android:drawableRight="@drawable/cancel"
             android:textAllCaps="false"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:layout_marginRight="20dp"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/view2"

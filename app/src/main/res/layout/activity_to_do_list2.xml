@@ -11,18 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorAccent"
-        android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="20dp">
+        android:layout_alignParentStart="true">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add work to do :"
+            android:text="Add Reminders"
+            android:drawableLeft="@drawable/ic_pets_black_24dp"
+            android:drawablePadding="10dp"
             android:background="@color/colorAccent"
             android:textColor="@android:color/white"
             android:textSize="24sp"/>
@@ -31,23 +31,30 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/my_toolbar">
+        android:layout_below="@+id/my_toolbar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
         <LinearLayout
+            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+           >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp">
                 <CheckBox
+                    android:id="@+id/checkbox_work_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <EditText
+                    android:id="@+id/editText_work_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="work 1"
+                    android:hint="Reminder 1"
+                    android:textColor="@android:color/black"
                     android:padding="10dp"/>
             </LinearLayout>
             <LinearLayout
@@ -55,12 +62,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp">
                 <CheckBox
+                    android:id="@+id/checkbox_work_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <EditText
+                    android:id="@+id/editText_work_2"
                     android:layout_width="match_parent"
+                    android:textColor="@android:color/black"
                     android:layout_height="wrap_content"
-                    android:hint="work 2"
+                    android:hint="Reminder 2"
                     android:padding="10dp"/>
             </LinearLayout>
             <LinearLayout
@@ -68,12 +78,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp">
                 <CheckBox
+                    android:id="@+id/checkbox_work_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <EditText
+                    android:id="@+id/editText_work_3"
                     android:layout_width="match_parent"
+                    android:textColor="@android:color/black"
                     android:layout_height="wrap_content"
-                    android:hint="work 3"
+                    android:hint="Reminder 3"
                     android:padding="10dp"/>
             </LinearLayout>
             <LinearLayout
@@ -81,12 +94,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp">
                 <CheckBox
+                    android:id="@+id/checkbox_work_4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <EditText
+                    android:id="@+id/editText_work_4"
                     android:layout_width="match_parent"
+                    android:textColor="@android:color/black"
                     android:layout_height="wrap_content"
-                    android:hint="work 4"
+                    android:hint="Reminder 4"
                     android:padding="10dp"/>
             </LinearLayout>
             <LinearLayout
@@ -94,38 +110,53 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp">
                 <CheckBox
+                    android:id="@+id/checkbox_work_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <EditText
+                    android:id="@+id/editText_work_5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="work 5"
-                    android:padding="10dp"/>
+                    android:textColor="@android:color/black"
+                    android:hint="Reminder 5"
+                    android:padding="10dp" />
             </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Note : Keep your reminder short (within 40 characters)."/>
+
+            <View
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#E0E0E0"/>
+
             <LinearLayout
-                android:layout_marginLeft="100dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/uncheckAll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Uncheck All?"
-                android:textColor="@color/colorAccent"
-                android:background="?selectableItemBackgroundBorderless"
-                android:textAllCaps="false"/>
+                <Button
+                    android:id="@+id/okToDoList"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Ok?"
+                    android:textColor="@color/colorAccent"
+                    android:layout_weight=".9"
+                    android:background="?selectableItemBackgroundBorderless"/>
                 <View
                     android:layout_width="2dp"
                     android:layout_height="match_parent"
-                    android:background="@android:color/darker_gray"/>
-                <Button
+                    android:background="#E0E0E0"/>
+                <Switch
                     android:id="@+id/checkAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Check All?"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Check All"
+                    android:layout_marginLeft="10dp"
                     android:textColor="@color/colorAccent"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:textAllCaps="false"/>
+                    android:enabled="true"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

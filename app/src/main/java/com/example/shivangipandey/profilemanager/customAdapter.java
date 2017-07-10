@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -48,6 +49,8 @@ public class customAdapter extends ArrayAdapter<Profiles> {
     private Switch aSwitch;
     Animation zoomin,zoomOut;
     private CircularImageView circularImageView;
+    Session session;
+    ActiveProfiles activeProfiles;
     public customAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Profiles> objects) {
         super(context, resource, objects);
         this.context = context;
@@ -56,6 +59,9 @@ public class customAdapter extends ArrayAdapter<Profiles> {
     @NonNull
     @Override
     public View getView(final int position, @Nullable final View convertView, @NonNull ViewGroup parent) {
+
+        session = new Session(context);
+        activeProfiles = new ActiveProfiles(context);
 
         View listItemView = convertView;
 
@@ -66,7 +72,7 @@ public class customAdapter extends ArrayAdapter<Profiles> {
         final Profiles profiles = getItem(position);
 
         if(profiles == null){
-            Toast.makeText(context,"Kindly restart the application", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,"Kindly restart the application.", Toast.LENGTH_SHORT).show();
             return listItemView;
         }
 
@@ -94,11 +100,22 @@ public class customAdapter extends ArrayAdapter<Profiles> {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-         //           int position1 = position;
-           //         Log.e("pos","                         "+position);
-                   // aSwitch.setChecked(true);
+
+                    if (session.getSDKVersion() >= Build.VERSION_CODES.M) {
+                        NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+                        if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                            Toast.makeText(context,"Enable Do Not Disturb Access to activate profiles", Toast.LENGTH_SHORT).show();
+                            aSwitch.setChecked(false);
+                        }
+                        else
+                            Toast.makeText(context,profiles.getProfile()+" activated",Toast.LENGTH_SHORT).show();
+
+                    }
+                    else
+                        Toast.makeText(context,profiles.getProfile()+" activated",Toast.LENGTH_SHORT).show();
+
                     if(!checkSilenceIntent(profiles)) {
-                        new Session(context).setEnabled(true, profiles.getProfile());
+                        session.setEnabled(true, profiles.getProfile());
                         int hourOfDay_start = profiles.getStartHour();
                         int minute_start = profiles.getStartMin();
                         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -108,18 +125,15 @@ public class customAdapter extends ArrayAdapter<Profiles> {
                         if (midPI != null) {
                             am.cancel(midPI);
                             midPI.cancel();
-                            new Session(context).setProfileActive(false, profiles.getProfile());
-                            new ActiveProfiles(context).deleteValue(profiles.getProfile());
+                            session.setProfileActive(false, profiles.getProfile());
+                            activeProfiles.deleteValue(profiles.getProfile());
                         }
                         setTimeMethod(hourOfDay_start, minute_start, NotificationSilenceReciever.class, "com.example.shivangipandey.notificationoff.NotificationSilenceReciever", profiles.getPendingIntentSilenceId(), profiles);
-                        Toast.makeText(context, "Alarm enabled", Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(context, "Alarm enabled", Toast.LENGTH_SHORT).show();
                     }
                 }
                 else{
-                   // aSwitch.setChecked(false);
-             //       int position1 = position;
-               //     Log.e("pos","        unchecked                   "+position);
-                    new Session(context).setEnabled(false,profiles.getProfile());
+                    session.setEnabled(false,profiles.getProfile());
                     cancelIntents(profiles);
                 }
             }
@@ -188,13 +202,13 @@ public class customAdapter extends ArrayAdapter<Profiles> {
 
     private void setTimeMethod(int hourOfDay, int minute, Class<?> cls, String action, int piID,Profiles profiles){
         boolean flag = false;
-        Toast.makeText(context, "time set for "+hourOfDay+":"+minute, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(context, "time set for "+hourOfDay+":"+minute, Toast.LENGTH_SHORT).show();
         Calendar midnightCalender = Calendar.getInstance();
         Calendar now = Calendar.getInstance();
         midnightCalender.set(Calendar.HOUR_OF_DAY,hourOfDay);
         midnightCalender.set(Calendar.MINUTE,minute);
 
-        if(midnightCalender.before(now)) {
+        if(midnightCalender.before(now) || (midnightCalender.getTimeInMillis()==now.getTimeInMillis())) {
 
             Calendar calEnd = Calendar.getInstance();
             calEnd.set(Calendar.HOUR_OF_DAY,profiles.getEndHour());
@@ -202,12 +216,12 @@ public class customAdapter extends ArrayAdapter<Profiles> {
 
             if(calEnd.after(now))
                 flag = true;
-
+            else
+                Toast.makeText(context,"Your profile is going to activate from tomorrow.", Toast.LENGTH_SHORT).show();
             midnightCalender.add(Calendar.DAY_OF_MONTH, 1);
-            Toast.makeText(context, "Your profile will activate at "+midnightCalender.getTime()+"from tomorrow", Toast.LENGTH_LONG).show();
         }
-        else
-            Toast.makeText(context, "Your profile will activate at "+midnightCalender.getTime()+"from today", Toast.LENGTH_LONG).show();
+        if(!flag)
+            checkForNotificationManager();
 
         AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context,cls);
@@ -236,7 +250,7 @@ public class customAdapter extends ArrayAdapter<Profiles> {
         if(midPI != null){
             am.cancel(midPI);
             midPI.cancel();
-            if(new Session(context).isProfileActive(profiles.getProfile()))
+            if(session.isProfileActive(profiles.getProfile()))
                 context.sendBroadcast(i);
         }
         if(midPI2 != null){
@@ -246,15 +260,39 @@ public class customAdapter extends ArrayAdapter<Profiles> {
                     (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.cancel(profiles.getPendingIntentSilenceId());
         }
-        Toast.makeText(context,"Pending Intents disabled", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context,profiles.getProfile()+" disabled", Toast.LENGTH_SHORT).show();
 
     }
     private boolean checkSilenceIntent(Profiles profiles){
+        if (session.getSDKVersion() >= Build.VERSION_CODES.M) {
+            NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                Toast.makeText(context,"Enable Do Not Disturb Access to activate profiles", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
         Intent i2 = new Intent(context,NotificationSilenceReciever.class);
     //    i2.putExtra("profiles",profiles);
         i2.setAction("com.example.shivangipandey.notificationoff.NotificationSilenceReciever");
         PendingIntent midPI2 = PendingIntent.getBroadcast(context,profiles.getPendingIntentSilenceId(),i2,PendingIntent.FLAG_NO_CREATE);
         return midPI2 != null;
     }
-
+    private void checkForNotificationManager() {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (session.getSDKVersion() >= Build.VERSION_CODES.M) {
+            if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                Intent intent1 = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (intent1.resolveActivity(context.getPackageManager()) != null) {
+                    context.startActivity(intent1);
+                    //startActivityForResult(intent1,0);
+                } else {
+                    session.putSDKVersion(Build.VERSION_CODES.KITKAT);
+                    Toast.makeText(context, "Manually enable do not disturb in settings.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        else
+            return;
+    }
 }

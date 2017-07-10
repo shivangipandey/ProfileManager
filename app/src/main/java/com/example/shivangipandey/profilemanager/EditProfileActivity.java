@@ -1,7 +1,9 @@
 package com.example.shivangipandey.profilemanager;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DialogFragment;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +11,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,11 +21,16 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,11 +67,14 @@ public class EditProfileActivity extends AppCompatActivity{
     int stringIds[] = {R.string.mode,R.string.volume,R.string.to_do_list};
     int stringIdTxts[] = {R.string.mode_Txt,R.string.volume_Txt,R.string.todolist_txt};
     int imgeRes[] = {R.drawable.ic_wb_sunny_black_24dp,R.drawable.ic_speaker_phone_black_24dp,R.drawable.ic_pets_black_24dp};
+    Session session;
+    ScrollView scrollView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
+        session = new Session(this);
      /*   ActionBar mActionBar = getSupportActionBar();
         assert mActionBar != null;
         mActionBar.setDisplayShowHomeEnabled(false);
@@ -92,8 +104,25 @@ public class EditProfileActivity extends AppCompatActivity{
         profileNames = (ProfileNames)getIntent().getSerializableExtra("profileNames");
         imageView = (ImageView)findViewById(R.id.imageView);
         circularImageView = (CircularImageView)findViewById(R.id.circle_icon);
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
 
-       // bmb = (BoomMenuButton)findViewById(R.id.bmb);
+        mProfileName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scrollView.post(new Runnable() { public void run() { scrollView.fullScroll(View.FOCUS_UP); } });
+            }
+        });
+
+        mProfileName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
+
+        // bmb = (BoomMenuButton)findViewById(R.id.bmb);
 
         for (int i = 0; i < checkBoxIDS.length; i++) {
             checkBoxes[i] = (CheckBox) findViewById(checkBoxIDS[i]);
@@ -104,12 +133,11 @@ public class EditProfileActivity extends AppCompatActivity{
                     .normalImageRes(imgeRes[i])
                     .normalTextRes(stringIds[i])
                     .subNormalTextRes(stringIdTxts[i])
-                   // .normalColor(Color.WHITE)
-                   // .normalTextColor(Color.DKGRAY)
                     .listener(new OnBMClickListener() {
                         @Override
                         public void onBoomButtonClick(int index) {
                             // When the boom-button corresponding this builder is clicked.
+                            bmb.clearAnimation();
                             switch (index){
                                 case 0 :
                                     Intent i = new Intent(EditProfileActivity.this, modeDialogActivity.class);
@@ -126,7 +154,7 @@ public class EditProfileActivity extends AppCompatActivity{
                                 case 2 :
                                     Intent intent1 = new Intent(EditProfileActivity.this,ToDoList.class);
                                     intent1.putExtra("profile",profiles);
-                                    startActivityForResult(intent1,4);
+                                    startActivityForResult(intent1,1);
                                     overridePendingTransition(R.anim.bottom_in,R.anim.top_out);
                                     break;
                             }
@@ -268,7 +296,7 @@ public class EditProfileActivity extends AppCompatActivity{
             @Override
             public boolean onLongClick(View v) {
                 if (profiles != null) {
-                    Toast.makeText(EditProfileActivity.this, profiles.getProfile(), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(EditProfileActivity.this, profiles.getProfile(), Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(EditProfileActivity.this,ProfilePictureDialogActivity.class);
                     i.putExtra("profile",profiles);
                     i.putExtra("isIcon",true);
@@ -282,7 +310,7 @@ public class EditProfileActivity extends AppCompatActivity{
             @Override
             public boolean onLongClick(View v) {
                 if (profiles != null) {
-                    Toast.makeText(EditProfileActivity.this, profiles.getProfile(), Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(EditProfileActivity.this, profiles.getProfile(), Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(EditProfileActivity.this,ProfilePictureDialogActivity.class);
                     i.putExtra("isIcon",false);
                     i.putExtra("profile",profiles);
@@ -311,7 +339,7 @@ public class EditProfileActivity extends AppCompatActivity{
         mSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String profileName = mProfileName.getText().toString();
+                String profileName = mProfileName.getText().toString().trim();
                 if(TextUtils.isEmpty(profileName)){
                     Toast.makeText(EditProfileActivity.this, "Enter profile name", Toast.LENGTH_SHORT).show();
                     return;
@@ -334,6 +362,7 @@ public class EditProfileActivity extends AppCompatActivity{
                         }
                     }
                     if(!profiles.getVibrationMode() && !profiles.getGeneralMode() && !profiles.getAlarmMode() && !profiles.getDoNotDisturbMode()){
+                        startAnimation(bmb);
                         Toast.makeText(EditProfileActivity.this,"Choose a mode.", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -431,13 +460,14 @@ public class EditProfileActivity extends AppCompatActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if(requestCode == 2 && data!= null && profiles!=null){
             profiles.setGeneralMode(data.getBooleanExtra("gen",false));
             profiles.setVibrationMode(data.getBooleanExtra("vib",false));
             profiles.setAlarmMode(data.getBooleanExtra("ala",false));
             profiles.setDoNotDisturbMode(data.getBooleanExtra("sil",false));
         }
-        if(requestCode == 3 && data!=null && profiles!=null){
+        else if(requestCode == 3 && data!=null && profiles!=null){
             AudioManager audioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
             String name[] = {"ringer","media","alarm","system","voicecall","notification"};
             int streams[] ={AudioManager.STREAM_RING,AudioManager.STREAM_MUSIC,AudioManager.STREAM_ALARM,AudioManager.STREAM_SYSTEM,AudioManager.STREAM_VOICE_CALL,AudioManager.STREAM_NOTIFICATION};
@@ -447,7 +477,7 @@ public class EditProfileActivity extends AppCompatActivity{
             }
             profiles.setVolume(volume);
         }
-        if(requestCode == 4 && data!=null && profiles!=null){
+        else if(requestCode == 4 && data!=null && profiles!=null){
             profiles.setImageId(data.getIntExtra("imageId",R.drawable.default_pic));
 
             int bitmapActive = data.getIntExtra("bitmap",-1);
@@ -462,22 +492,35 @@ public class EditProfileActivity extends AppCompatActivity{
                 circularImageView.setImageResource(profiles.getImageId());
             }
         }
-        if(requestCode == 5 && data!=null && profiles!=null){
+        else if(requestCode == 5 && data!=null && profiles!=null){
             profiles.setImageBackgroundIdId(data.getIntExtra("imageId",R.drawable.blurry4));
             imageView.setImageResource(profiles.getBackgroundImageId());
+        }
+        else if(requestCode == 1 && data!=null && profiles!=null ){
+            profiles.setIsToDoListEnabled(data.getBooleanArrayExtra("isChecked"));
+            profiles.setWorks(data.getStringArrayExtra("works"));
         }
     }
 
     private void setTimeMethod(int hourOfDay, int minute, Class<?> cls, String action, int piID){
-        new Session(this).setEnabled(true,profiles.getProfile());
+        session.setEnabled(true,profiles.getProfile());
         boolean flag = false;
-        Toast.makeText(this, "time set for "+hourOfDay+":"+minute, Toast.LENGTH_SHORT).show();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+     //   Toast.makeText(this, "time set for "+hourOfDay+":"+minute, Toast.LENGTH_SHORT).show();
         Calendar midnightCalender = Calendar.getInstance();
         Calendar now = Calendar.getInstance();
         midnightCalender.set(Calendar.HOUR_OF_DAY,hourOfDay);
         midnightCalender.set(Calendar.MINUTE,minute);
 
-        if(midnightCalender.before(now)) {
+
+        if (session.getSDKVersion() >= Build.VERSION_CODES.M) {
+            if(notificationManager.isNotificationPolicyAccessGranted())
+                Toast.makeText(this,profiles.getProfile()+" Activated", Toast.LENGTH_SHORT).show();
+        }
+        else
+            Toast.makeText(this,profiles.getProfile()+" Activated", Toast.LENGTH_SHORT).show();
+
+        if(midnightCalender.before(now) || (midnightCalender.getTimeInMillis()==now.getTimeInMillis())) {
 
             Calendar calEnd = Calendar.getInstance();
             calEnd.set(Calendar.HOUR_OF_DAY,profiles.getEndHour());
@@ -487,10 +530,12 @@ public class EditProfileActivity extends AppCompatActivity{
 
             if(calEnd.after(now))
                 flag = true;
-            Toast.makeText(this, "Your profile will activate at "+midnightCalender.getTime()+" from tomorrow.", Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(this,"Your profile is going to activate from tomorrow.", Toast.LENGTH_SHORT).show();
         }
-        else
-            Toast.makeText(this, "Your profile will activate at "+midnightCalender.getTime()+" from today", Toast.LENGTH_LONG).show();
+        if(!flag)
+            checkForNotificationManager();
+
         AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(this,cls);
@@ -513,5 +558,37 @@ public class EditProfileActivity extends AppCompatActivity{
     private Bitmap getBitmapImg(){
         File file = new File(getCacheDir(),"bitmap_file");
         return BitmapFactory.decodeFile(file.getAbsolutePath());
+    }
+
+    private void checkForNotificationManager() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (session.getSDKVersion() >= Build.VERSION_CODES.M) {
+            if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                Intent intent1 = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (intent1.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent1);
+                    //startActivityForResult(intent1,0);
+                } else {
+                    session.putSDKVersion(Build.VERSION_CODES.KITKAT);
+                    Toast.makeText(this, "Manually enable do not disturb in settings.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        else
+            return;
+    }
+    private void startAnimation(BoomMenuButton bmb){
+        Animation animation = new AlphaAnimation(1,0);
+        animation.setDuration(500);
+        animation.setInterpolator(new LinearInterpolator());
+        animation.setRepeatCount(Animation.INFINITE);
+        animation.setRepeatMode(Animation.REVERSE);
+        bmb.startAnimation(animation);
+    }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

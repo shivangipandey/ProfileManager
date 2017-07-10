@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorAccent"
-        android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
@@ -19,6 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Set Mode"
+            android:drawableLeft="@drawable/ic_wb_sunny_black_24dp"
+            android:drawablePadding="10dp"
             android:background="@color/colorAccent"
             android:textColor="@android:color/white"
             android:textSize="24sp"/>

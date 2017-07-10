@@ -24,12 +24,10 @@ public class BootUpReciever extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         extractFromFile = new ExtractFromFile();
+        Log.e("started","                 BOOTRECIEVERSTARTED");
         if(intent.getAction() != null && intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
             midnightAlarmStart(context);
-           /* Intent i = new Intent(context,MainActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(i);*/
-            Toast.makeText(context,"Boot Up reciever starts", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(context,"Boot Up reciever starts", Toast.LENGTH_SHORT).show();
         }
 
         //ProfileNames profileNames = getSerializedList(context);
@@ -40,8 +38,11 @@ public class BootUpReciever extends BroadcastReceiver {
             for(int i = 0;i<arrayList.size();i++){
               //  Profiles profiles = getSerializedProfile(arrayList.get(i),context);
                 Profiles profiles = extractFromFile.deserializeProfile(arrayList.get(i),context);
-                if(session.getEnabled(profiles.getProfile()) && profiles != null){
+
+                Log.e("started","                 BOOTRECIEVERSTARTEDOUT" +"  "+profiles.getProfile());
+                if( profiles != null && session.getEnabled(profiles.getProfile())){
                     if(!checkSilenceIntent(profiles,context)){
+                        Log.e("started","                 BOOTRECIEVERSTARTED in");
                         int hourOfDay_start = profiles.getStartHour();
                         int minute_start = profiles.getStartMin();
                         AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
@@ -55,7 +56,7 @@ public class BootUpReciever extends BroadcastReceiver {
                             new ActiveProfiles(context).deleteValue(arrayList.get(i));
                         }
                         setTimeMethod(hourOfDay_start,minute_start,NotificationSilenceReciever.class,"com.example.shivangipandey.notificationoff.NotificationSilenceReciever",profiles.getPendingIntentSilenceId(),profiles,context);
-                        Toast.makeText(context,"Alarm enabled", Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(context,profiles.getProfile()+" enabled", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -99,7 +100,7 @@ public class BootUpReciever extends BroadcastReceiver {
     }*/
     private void setTimeMethod(int hourOfDay, int minute, Class<?> cls, String action, int piID,Profiles profiles,Context context){
         boolean flag = false;
-        Toast.makeText(context, "time set for "+hourOfDay+":"+minute, Toast.LENGTH_SHORT).show();
+     //   Toast.makeText(context, "time set for "+hourOfDay+":"+minute, Toast.LENGTH_SHORT).show();
         Calendar midnightCalender = Calendar.getInstance();
         Calendar now = Calendar.getInstance();
         midnightCalender.set(Calendar.HOUR_OF_DAY,hourOfDay);
@@ -111,14 +112,12 @@ public class BootUpReciever extends BroadcastReceiver {
             calEnd.set(Calendar.HOUR_OF_DAY,profiles.getEndHour());
             calEnd.set(Calendar.MINUTE,profiles.getEndMin());
 
-            if(calEnd.after(now))
+            if(calEnd.after(now)) {
                 flag = true;
-
+            }
             midnightCalender.add(Calendar.DAY_OF_MONTH, 1);
-            Toast.makeText(context, "Your profile will activate at "+midnightCalender.getTime()+"from tomorrow", Toast.LENGTH_LONG).show();
         }
-        else
-            Toast.makeText(context, "Your profile will activate at "+midnightCalender.getTime()+"from today", Toast.LENGTH_LONG).show();
+        //Toast.makeText(context,profiles.getProfile()+" activated",Toast.LENGTH_SHORT).show();
 
         AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context,cls);

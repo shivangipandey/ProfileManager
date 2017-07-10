@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.os.Build;
 import android.provider.ContactsContract;
 
 import java.util.ArrayList;
@@ -23,12 +24,21 @@ public class Session {
         sharedPreferences = context.getSharedPreferences("shivangi_pandey9798_sharedprefs",Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
+    public void isLaunched(boolean value){
+        editor.putBoolean("isLaunched",value);
+        editor.apply();
+    }
     public void setProfile(String profile){
         editor.putString("profile",profile);
         editor.apply();
     }
     public void setEnabled(boolean setEnable,String profile){
         editor.putBoolean("isEnable"+profile,setEnable);
+        editor.apply();
+    }
+
+    public void setFirstProfile(String profile){
+        editor.putString("firstProfile",profile);
         editor.apply();
     }
 
@@ -103,5 +113,25 @@ public class Session {
     }
     public boolean isProfileActive(String profile){
         return sharedPreferences.getBoolean("active"+profile,false);
+    }
+    public String getFirstProfile(){
+        return sharedPreferences.getString("firstProfile",null);
+    }
+    public boolean getLaunched() {
+        return sharedPreferences.getBoolean("isLaunched",true);
+    }
+    public void setProtected(boolean value,String maufacturer){
+        editor.putBoolean("protected"+maufacturer,value);
+        editor.apply();
+    }
+    public boolean getProtected(String manufacturer){
+       return sharedPreferences.getBoolean("protected"+manufacturer,false);
+    }
+    public void putSDKVersion(int version){
+        editor.putInt("version",version);
+        editor.apply();
+    }
+    public int getSDKVersion(){
+        return sharedPreferences.getInt("version", Build.VERSION.SDK_INT);
     }
 }

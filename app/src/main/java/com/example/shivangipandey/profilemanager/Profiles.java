@@ -27,7 +27,8 @@ public class Profiles implements Serializable{
     private int progress[] = null;
     private byte[] bitmpaArray = null;
     private int imageBackgroundId = R.drawable.blurry4;
-
+    private boolean[] isToDoListEnabled = {false,false,false,false,false};
+    private String[] works = new String[5];
     public Profiles(){
     }
 
@@ -86,6 +87,13 @@ public class Profiles implements Serializable{
         }
         else bitmpaArray = null;
     }
+    public void setIsToDoListEnabled(boolean[] isToDoListEnabled){
+        this.isToDoListEnabled = isToDoListEnabled;
+    }
+    public void setWorks(String[] works){
+        this.works = works;
+    }
+
     public String getProfile(){
         return name;
     }
@@ -140,5 +148,10 @@ public class Profiles implements Serializable{
         else
             return null;
     }
-
+    public boolean[] getToDoListEnabled(){
+        return isToDoListEnabled;
+    }
+    public String[] getWorks(){
+        return works;
+    }
 }

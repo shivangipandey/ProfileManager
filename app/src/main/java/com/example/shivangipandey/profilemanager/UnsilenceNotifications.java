@@ -29,12 +29,12 @@ public class UnsilenceNotifications extends BroadcastReceiver{
     int streams[] ={AudioManager.STREAM_RING,AudioManager.STREAM_MUSIC,AudioManager.STREAM_ALARM,AudioManager.STREAM_SYSTEM,AudioManager.STREAM_VOICE_CALL,AudioManager.STREAM_NOTIFICATION};
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        boolean onlyLeft = false;
         ExtractFromFile extractFromFile = new ExtractFromFile();
         session = new Session(context);
         String profileName = intent.getStringExtra("profiles");
         if(profileName == null){
-            Toast.makeText(context,"Restart your App", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,"Restart your App.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -42,7 +42,7 @@ public class UnsilenceNotifications extends BroadcastReceiver{
         //String pro = intent.getStringExtra("profiles");
 
         if(profiles == null){
-            Toast.makeText(context,"Restart your App", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,"Restart your App.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -57,29 +57,29 @@ public class UnsilenceNotifications extends BroadcastReceiver{
 
         if(!hasNextValue) {
 
-            if (preProfileName == null)
+            if (preProfileName == null) {
+                //preProfileName = session.getFirstProfile();
                 preProfileName = profileName;
+               onlyLeft = true;
+            }
 
             if (session.isProfileActive(preProfileName) && !profileName.equals(preProfileName)) {
                 checkPrevoiousAlarms(preProfileName, context);
             }
             else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    notificationManager.setInterruptionFilter(session.getCurrentMode(profileName));
+                String name;
+                if(onlyLeft)
+                    name = session.getFirstProfile();
+                else
+                    name = profileName;
+
+                if (session.getSDKVersion() >= Build.VERSION_CODES.M) {
+                    notificationManager.setInterruptionFilter(session.getCurrentMode(name));
                 } else
-                    audioManager.setRingerMode(session.getCurrentringerMode(profileName));
+                    audioManager.setRingerMode(session.getCurrentringerMode(name));
 
-                int volume[] = session.getCurrentVolume(profileName);
+                int volume[] = session.getCurrentVolume(name);
                 if (volume != null) {
-                    boolean flag = true;
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if(notificationManager.getCurrentInterruptionFilter() == NotificationManager.INTERRUPTION_FILTER_NONE) {
-                            flag = false;
-                            Toast.makeText(context,"Do Not Disturb mode needs to be disabled to change the volume.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    if(flag)
                         for (int i = 1; i < volume.length; i++) {
                             audioManager.setStreamVolume(streams[i], volume[i], 0);
                         }
@@ -117,19 +117,26 @@ public class UnsilenceNotifications extends BroadcastReceiver{
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
         if (session.getDoNotDisturbMode(preProfileName)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (session.getSDKVersion() >= Build.VERSION_CODES.M) {
                 notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
             } else {
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
             }
+            audioManager.setStreamVolume(streams[0],2,0);
             Toast.makeText(context, "Do not disturb enabled", Toast.LENGTH_LONG).show();
         } else {
             if (profiles.getGeneralMode()) {
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                Toast.makeText(context, "general mode enabled", Toast.LENGTH_SHORT);
+                Toast.makeText(context, "general mode enabled", Toast.LENGTH_SHORT).show();
             } else {
-                if (session.getAlarmMode(preProfileName)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (session.getVibrationMode(preProfileName)) {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                    audioManager.setStreamVolume(AudioManager.STREAM_RING,0,0);
+                    audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION,0,0);
+                    Toast.makeText(context, "Vibration mode enabled", Toast.LENGTH_SHORT).show();
+                }
+                else if (session.getAlarmMode(preProfileName)) {
+                    if (session.getSDKVersion() >= Build.VERSION_CODES.M) {
                         notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALARMS);
                     } else {
                         Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
@@ -141,16 +148,13 @@ public class UnsilenceNotifications extends BroadcastReceiver{
                                 alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
                             }
                         }
-                        Toast.makeText(context, "Everything accept alarms disabled", Toast.LENGTH_SHORT);
-                    }
-                    if (session.getVibrationMode(preProfileName)) {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                        Toast.makeText(context, "Vibration mode enabled", Toast.LENGTH_SHORT).show();
+                        RingtoneManager.getRingtone(context, alert).setStreamType(AudioManager.STREAM_ALARM);
+                        Toast.makeText(context, "Everything accept alarms disabled", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
             if (!session.getGeneralMode(preProfileName) && !session.getVibrationMode(preProfileName)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (session.getSDKVersion() >= Build.VERSION_CODES.M) {
                     notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL);
                 }
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
@@ -162,20 +166,9 @@ public class UnsilenceNotifications extends BroadcastReceiver{
         if(preProfile != null) {
             int volume[] = preProfile.getvolumes();
             if (volume != null) {
-                boolean flag = true;
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (notificationManager.getCurrentInterruptionFilter() == NotificationManager.INTERRUPTION_FILTER_NONE) {
-                        flag = false;
-                        Toast.makeText(context, "Do Not Disturb mode needs to be disabled to change the volume.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                if (flag) {
                     for (int i = 1; i < volume.length; i++)
                         audioManager.setStreamVolume(streams[i], volume[i], 0);
                     audioManager.setStreamVolume(streams[0],volume[0],0);
-                }
-
             }
         }
     }

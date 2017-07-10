@@ -22,7 +22,7 @@ public class modeDialogActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.modes_item_dialog);
-        setFinishOnTouchOutside(false);
+        setFinishOnTouchOutside(true);
         int id[] = {R.id.ringer_checkbox, R.id.vibration_checkbox, R.id.alarm_checkbox, R.id.doNotDisturb_checkbox};
         okay = (Button)findViewById(R.id.okButton);
 
@@ -30,7 +30,12 @@ public class modeDialogActivity extends AppCompatActivity {
             checkBox[i] = (CheckBox) findViewById(id[i]);
 
         profiles = (Profiles)getIntent().getSerializableExtra("profile");
-        Toast.makeText(this, profiles.getProfile(), Toast.LENGTH_SHORT).show();
+   //     Toast.makeText(this, profiles.getProfile(), Toast.LENGTH_SHORT).show();
+
+        if(profiles == null){
+            Toast.makeText(getApplicationContext(),"Restart the application",Toast.LENGTH_LONG).show();
+            return;
+        }
 
         checkBox[0].setChecked(profiles.getGeneralMode());
         general = profiles.getGeneralMode();

@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -36,6 +37,9 @@ public class ProfilePictureDialogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile_picture_dialog);
 
         profiles = (Profiles)getIntent().getSerializableExtra("profile");
+
+        if(profiles == null)
+            Toast.makeText(this, "Restart the application.", Toast.LENGTH_SHORT).show();
 
         isIcon = getIntent().getBooleanExtra("isIcon",false);
 

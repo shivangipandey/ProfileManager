@@ -21,6 +21,8 @@
             android:layout_height="wrap_content"
             android:text="Set Volume"
             android:background="@color/colorAccent"
+            android:drawableLeft="@drawable/ic_speaker_phone_black_24dp"
+            android:drawablePadding="10dp"
             android:textColor="@android:color/white"
             android:textSize="24sp"/>
 
