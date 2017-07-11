@@ -1,4 +1,4 @@
-package com.example.shivangipandey.profilemanager;
+package yours.appli_pro_man.shivangipandey.profilemanager;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.shivangipandey.profilemanager", appContext.getPackageName());
+        assertEquals("yours.appli_pro_man.shivangipandey.profilemanager", appContext.getPackageName());
     }
 }

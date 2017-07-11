@@ -6,7 +6,7 @@
     android:id="@+id/ParentLayout"
     android:layout_height="match_parent"
     android:background="@android:color/holo_blue_light"
-    tools:context="com.example.shivangipandey.profilemanager.MainActivity">
+    tools:context="yours.appli_pro_man.shivangipandey.profilemanager.MainActivity">
 
     <ListView
         android:layout_margin="5dp"

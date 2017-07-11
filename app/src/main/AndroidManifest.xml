@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.shivangipandey.profilemanager"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="yours.appli_pro_man.shivangipandey.profilemanager"
     android:installLocation="internalOnly">
 
     <!-- permission required to use Alarm Manager -->
@@ -10,7 +11,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA"
+        tools:node="remove"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 
@@ -21,7 +23,7 @@
         android:roundIcon="@drawable/icon2"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="yours.appli_pro_man.shivangipandey.profilemanager.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,23 +31,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EditProfileActivity"
+            android:name="yours.appli_pro_man.shivangipandey.profilemanager.EditProfileActivity"
             android:label="Modify"
             android:theme="@style/AppTheme1"
             android:windowSoftInputMode="stateHidden" />
 
-        <receiver android:name=".NotificationSilenceReciever">
+        <receiver android:name="yours.appli_pro_man.shivangipandey.profilemanager.NotificationSilenceReciever">
             <intent-filter>
                 <action android:name="com.example.shivangipandey.notificationoff.NotificationSilenceReciever" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".UnsilenceNotifications">
+        <receiver android:name="yours.appli_pro_man.shivangipandey.profilemanager.UnsilenceNotifications">
             <intent-filter>
                 <action android:name="com.example.shivangipandey.notificationoff.UnsilenceNotificationReciever" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".BootUpReciever"
+            android:name="yours.appli_pro_man.shivangipandey.profilemanager.BootUpReciever"
             android:enabled="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
@@ -56,24 +58,24 @@
         </receiver>
 
         <activity
-            android:name=".modeDialogActivity"
+            android:name="yours.appli_pro_man.shivangipandey.profilemanager.modeDialogActivity"
             android:label="Select modes"
             android:theme="@style/AppCompatAlertDialogStyle" />
         <activity
-            android:name=".ProfilePictureDialogActivity"
+            android:name="yours.appli_pro_man.shivangipandey.profilemanager.ProfilePictureDialogActivity"
             android:label="Select picture"
             android:theme="@style/AppCompatAlertDialogStyle" />
         <activity
-            android:name=".VolumeActivity"
+            android:name="yours.appli_pro_man.shivangipandey.profilemanager.VolumeActivity"
             android:label="Set volume"
             android:theme="@style/AppCompatAlertDialogStyle" />
         <activity
-            android:name=".ToDoList"
+            android:name="yours.appli_pro_man.shivangipandey.profilemanager.ToDoList"
             android:label="Add work to do"
             android:theme="@style/AppCompatAlertDialogStyle" />
-        <activity android:name=".IntroActivity"></activity>
+        <activity android:name="yours.appli_pro_man.shivangipandey.profilemanager.IntroActivity"></activity>
 
-        <service android:name=".OnCheckService"></service>
+        <service android:name="yours.appli_pro_man.shivangipandey.profilemanager.OnCheckService"></service>
 
     </application>
 

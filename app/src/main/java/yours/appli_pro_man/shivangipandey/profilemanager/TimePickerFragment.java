@@ -1,4 +1,4 @@
-package com.example.shivangipandey.profilemanager;
+package yours.appli_pro_man.shivangipandey.profilemanager;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.widget.Button;
 import android.widget.TimePicker;
+
+import yours.appli_pro_man.shivangipandey.profilemanager.R;
 
 import java.util.Calendar;
 

@@ -1,4 +1,4 @@
-package com.example.shivangipandey.profilemanager;
+package yours.appli_pro_man.shivangipandey.profilemanager;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +11,8 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
+
+import yours.appli_pro_man.shivangipandey.profilemanager.R;
 
 public class ToDoList extends AppCompatActivity {
 

@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:clickable="true"
     android:focusableInTouchMode="true"
-    tools:context="com.example.shivangipandey.profilemanager.EditProfileActivity">
+    tools:context="yours.appli_pro_man.shivangipandey.profilemanager.EditProfileActivity">
 
     <ScrollView
         android:id="@+id/scrollView"

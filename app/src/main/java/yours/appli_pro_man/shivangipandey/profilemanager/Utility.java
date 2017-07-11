@@ -1,4 +1,4 @@
-package com.example.shivangipandey.profilemanager;
+package yours.appli_pro_man.shivangipandey.profilemanager;
 
 import android.Manifest;
 import android.annotation.TargetApi;

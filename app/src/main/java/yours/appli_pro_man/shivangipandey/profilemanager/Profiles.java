@@ -1,8 +1,10 @@
-package com.example.shivangipandey.profilemanager;
+package yours.appli_pro_man.shivangipandey.profilemanager;
 
 import android.app.NotificationManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import yours.appli_pro_man.shivangipandey.profilemanager.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
