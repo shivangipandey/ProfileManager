@@ -131,4 +131,11 @@ public class Session {
     public int getSDKVersion(){
         return sharedPreferences.getInt("version", Build.VERSION.SDK_INT);
     }
+    public void setCurrentBrightness(int brightness,String profile){
+        editor.putInt("brightness"+profile,brightness);
+        editor.apply();
+    }
+    public int getCurrebtBrightness(String profile){
+        return sharedPreferences.getInt("brightness"+profile,50);
+    }
 }

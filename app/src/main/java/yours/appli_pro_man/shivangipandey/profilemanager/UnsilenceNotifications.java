@@ -10,6 +10,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
@@ -78,6 +79,13 @@ public class UnsilenceNotifications extends BroadcastReceiver{
                     notificationManager.setInterruptionFilter(session.getCurrentMode(name));
                 } else
                     audioManager.setRingerMode(session.getCurrentringerMode(name));
+
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                    if(Settings.System.canWrite(context))
+                        setBrightness(session.getCurrebtBrightness(name),context);
+                }
+                else
+                    setBrightness(session.getCurrebtBrightness(name),context);
 
                 int volume[] = session.getCurrentVolume(name);
                 if (volume != null) {
@@ -165,6 +173,15 @@ public class UnsilenceNotifications extends BroadcastReceiver{
         Profiles preProfile = getSerializedProfile(preProfileName,context);
 
         if(preProfile != null) {
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                if(Settings.System.canWrite(context))
+                    setBrightness(preProfile.getBrightness(),context);
+            }
+            else
+                setBrightness(preProfile.getBrightness(),context);
+
+
             int volume[] = preProfile.getvolumes();
             if (volume != null) {
                     for (int i = 1; i < volume.length; i++)
@@ -187,5 +204,8 @@ public class UnsilenceNotifications extends BroadcastReceiver{
         }
         return p;
     }
-
+    public void setBrightness(int brightness,Context context){
+        android.provider.Settings.System.putInt(context.getContentResolver(),
+                android.provider.Settings.System.SCREEN_BRIGHTNESS, brightness);
+    }
 }

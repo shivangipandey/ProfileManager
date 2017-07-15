@@ -9,6 +9,7 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.widget.Toast;
 
 import yours.appli_pro_man.shivangipandey.profilemanager.R;
@@ -18,12 +19,14 @@ import com.github.paolorotolo.appintro.AppIntroFragment;
 import java.util.List;
 
 public class IntroActivity extends AppIntro {
-
     Fragment permissionPage;
     int count = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
 
         permissionPage = AppIntroFragment.newInstance("Permissions","This app requires DO NOT DISTURB permission to keep" +
                 " your profiles interactive.",R.drawable.dndper,getResources().getColor(R.color.colorAccent));

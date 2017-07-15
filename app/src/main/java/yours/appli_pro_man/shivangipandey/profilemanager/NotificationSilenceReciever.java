@@ -13,6 +13,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import yours.appli_pro_man.shivangipandey.profilemanager.R;
@@ -105,6 +107,19 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
         session.setGeneralMode(false, profileName);
         session.setVibrationMode(false, profileName);
 
+        int brightness = -1;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if(Settings.System.canWrite(context))
+                brightness = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
+        }
+        else
+            brightness = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
+
+        if(brightness != -1) {
+            session.setCurrentBrightness(brightness, profiles.getProfile());
+            if(profiles.getBrightnessEnabled())
+                setBrightness(profiles.getBrightness(),context);
+        }
 
         int streams[] ={AudioManager.STREAM_RING,AudioManager.STREAM_MUSIC,AudioManager.STREAM_ALARM,AudioManager.STREAM_SYSTEM,AudioManager.STREAM_VOICE_CALL,AudioManager.STREAM_NOTIFICATION};
         int volume[] = new int[streams.length];
@@ -294,5 +309,10 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
     //    intent.putExtra("pendingIntObj",midPI);
         am.setRepeating(AlarmManager.RTC_WAKEUP,midnightCalender.getTimeInMillis(),AlarmManager.INTERVAL_DAY,midPI);
 
+    }
+
+    public void setBrightness(int brightness,Context context){
+        android.provider.Settings.System.putInt(context.getContentResolver(),
+                android.provider.Settings.System.SCREEN_BRIGHTNESS, brightness);
     }
 }

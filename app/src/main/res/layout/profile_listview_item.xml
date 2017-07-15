@@ -7,8 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="8dp"
+    app:cardElevation="0dp"
     card_view:contentPadding="10dp"
-    card_view:cardElevation="2dp"
     android:clickable="false"
     android:background="?selectableItemBackgroundBorderless"
     android:descendantFocusability="blocksDescendants"
@@ -25,7 +25,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/blurry4" />
+                android:src="@drawable/blurry4"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/circle_icon"
@@ -47,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/list_item_imageView"
                 android:layout_alignParentLeft="true"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
@@ -59,9 +62,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/list_item_imageView"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_toRightOf="@id/mode1"
                 android:src="@drawable/ic_access_alarm_black_24dp" />
@@ -70,16 +72,16 @@
             android:id="@+id/profileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/mode1"
             android:clickable="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:layout_marginLeft="5dp"
             android:text="office"
+            android:layout_marginBottom="5dp"
             android:textColor="@android:color/holo_blue_light"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:layout_below="@+id/mode2"
+            android:layout_alignLeft="@+id/mode1"
+            android:layout_alignStart="@+id/mode1" />
 
             <Switch
                 android:id="@+id/switch1"
@@ -87,10 +89,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/list_item_imageView"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="7dp"
                 android:checked="true"
                 android:clickable="true"
                 android:focusable="false" />
@@ -103,7 +104,7 @@
             android:layout_below="@id/switch1"
             android:clickable="false"
             android:focusable="false"
-            android:layout_marginTop="30dp"
+            android:layout_marginLeft="10dp"
             android:focusableInTouchMode="false"
             android:orientation="horizontal">
 
@@ -123,8 +124,8 @@
 
             <CheckBox
                 android:id="@+id/monday"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/circle_background"
                 android:button="@android:color/transparent"
@@ -137,8 +138,8 @@
 
             <CheckBox
                 android:id="@+id/tuesday"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/circle_background"
                 android:button="@android:color/transparent"
@@ -151,8 +152,8 @@
 
             <CheckBox
                 android:id="@+id/wednesday"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/circle_background"
                 android:button="@android:color/transparent"
@@ -165,8 +166,8 @@
 
             <CheckBox
                 android:id="@+id/thrusday"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/circle_background"
                 android:button="@android:color/transparent"
@@ -179,8 +180,8 @@
 
             <CheckBox
                 android:id="@+id/friday"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/circle_background"
                 android:button="@android:color/transparent"
@@ -193,9 +194,8 @@
 
             <CheckBox
                 android:id="@+id/saturday"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginRight="5dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:background="@drawable/circle_background"
                 android:button="@android:color/transparent"
                 android:clickable="false"
@@ -211,7 +211,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/profileName"
-                android:padding="5dp">
+                >
             <TextView
                     android:id="@+id/start_time"
                     android:layout_width="wrap_content"
@@ -223,13 +223,13 @@
                     android:gravity="right"
                     android:text="06:30"
                     android:textColor="@android:color/black"
-                    android:textSize="25sp" />
+                    android:textSize="30sp" />
 
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5sp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2sp"
                     android:clickable="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
@@ -247,7 +247,8 @@
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:textColor="@android:color/black"
-                    android:textSize="25sp"
+                    android:textSize="30sp"
+
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:text="08:30" />

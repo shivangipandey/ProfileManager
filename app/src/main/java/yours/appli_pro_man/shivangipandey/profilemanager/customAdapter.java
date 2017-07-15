@@ -78,9 +78,9 @@ public class customAdapter extends ArrayAdapter<Profiles> {
         mode2 = (ImageView)listItemView.findViewById(R.id.mode2);
         profilePicture = (ImageView)listItemView.findViewById(R.id.list_item_imageView);
         aSwitch = (Switch)listItemView.findViewById(R.id.switch1);
-        zoomin = AnimationUtils.loadAnimation(context,R.anim.zoom_in);
-        zoomOut = AnimationUtils.loadAnimation(context,R.anim.zoom_out);
-        profilePicture.setAnimation(zoomin);
+        //zoomin = AnimationUtils.loadAnimation(context,R.anim.zoom_in);
+        //zoomOut = AnimationUtils.loadAnimation(context,R.anim.zoom_out);
+        //profilePicture.setAnimation(zoomin);
         circularImageView = (CircularImageView)listItemView.findViewById(R.id.circle_icon);
 
        // int position1 = position;

@@ -5,17 +5,22 @@ import android.app.AlarmManager;
 import android.app.DialogFragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -26,6 +31,8 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import yours.appli_pro_man.shivangipandey.profilemanager.R;
@@ -39,6 +46,7 @@ import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.Set;
 
 public class EditProfileActivity extends AppCompatActivity{
 
@@ -61,6 +69,9 @@ public class EditProfileActivity extends AppCompatActivity{
     int imgeRes[] = {R.drawable.ic_wb_sunny_black_24dp,R.drawable.ic_speaker_phone_black_24dp,R.drawable.ic_pets_black_24dp};
     Session session;
     ScrollView scrollView;
+    SeekBar brightnessSeekbar;
+    int brightness = -1;
+    Switch brightnessSwitch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +108,19 @@ public class EditProfileActivity extends AppCompatActivity{
         imageView = (ImageView)findViewById(R.id.imageView);
         circularImageView = (CircularImageView)findViewById(R.id.circle_icon);
         scrollView = (ScrollView) findViewById(R.id.scrollView);
+        brightnessSeekbar = (SeekBar) findViewById(R.id.brightness_seekbar);
+        brightnessSeekbar.setMax(225);
+        brightnessSwitch = (Switch)findViewById(R.id.switchBrightness);
+        brightnessSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                profiles.setBrightnessEnabled(isChecked);
+                if(!isChecked)
+                    brightnessSeekbar.setEnabled(false);
+                else
+                    brightnessSeekbar.setEnabled(true);
+            }
+        });
 
         mProfileName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,6 +189,11 @@ public class EditProfileActivity extends AppCompatActivity{
 
         if(getIntent().hasExtra("profile")){
             profiles = (Profiles)getIntent().getSerializableExtra("profile");
+            if(profiles == null){
+                Toast.makeText(this,"Cache for this application is removed.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            brightness = profiles.getBrightness();
             mProfileName.setText(profiles.getProfile());
             oldProfileName = profiles.getProfile();
             position = getIntent().getIntExtra("position",0);
@@ -197,6 +226,44 @@ public class EditProfileActivity extends AppCompatActivity{
             else
                 circularImageView.setImageResource(profiles.getImageId());
         }
+        brightnessSwitch.setChecked(profiles.getBrightnessEnabled());
+
+        if(brightness != -1)
+            brightnessSeekbar.setProgress(brightness);
+        else
+            brightness = 1;
+
+        brightnessSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                brightness = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                    if(!Settings.System.canWrite(EditProfileActivity.this)){
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                        intent.setData(Uri.parse("package:" +getPackageName()));
+                        startActivity(intent);
+                        Toast.makeText(EditProfileActivity.this,"Enable manage settings to allow device to change brightness", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    else {
+                        try {
+                            if(Settings.System.getInt(EditProfileActivity.this.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE) == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC)
+                                Toast.makeText(EditProfileActivity.this,"Switch off auto brightness to see the results", Toast.LENGTH_SHORT).show();
+                        } catch (Settings.SettingNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
 
         if(!editProfile) {
             checkBoxes[day - 1].setChecked(true);
@@ -331,7 +398,7 @@ public class EditProfileActivity extends AppCompatActivity{
         mSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String profileName = mProfileName.getText().toString().trim();
+               String profileName = mProfileName.getText().toString().trim();
                 if(TextUtils.isEmpty(profileName)){
                     Toast.makeText(EditProfileActivity.this, "Enter profile name", Toast.LENGTH_SHORT).show();
                     return;
@@ -384,6 +451,7 @@ public class EditProfileActivity extends AppCompatActivity{
 
                 int hourOfDay_start = profiles.getStartHour();
                 int minute_start = profiles.getStartMin();
+                profiles.setBrightness(brightness);
 
                 AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
                 Intent i = new Intent(EditProfileActivity.this,UnsilenceNotifications.class);
@@ -398,10 +466,9 @@ public class EditProfileActivity extends AppCompatActivity{
 
                 setTimeMethod(hourOfDay_start,minute_start,NotificationSilenceReciever.class,"com.example.shivangipandey.notificationoff.NotificationSilenceReciever",profiles.getPendingIntentSilenceId());
 
+                new backgroundTask().execute(profileName);
           //      makeListSerializable(profileNames);
-                extractFromFile.serializeProfileNameList(profileNames,EditProfileActivity.this);
-              // makeProfileObjSerializable(profileName,profiles);
-                extractFromFile.serializeProfiles(profileName,profiles,EditProfileActivity.this);
+
                 returnMain();
             }
 
@@ -414,6 +481,19 @@ public class EditProfileActivity extends AppCompatActivity{
                 overridePendingTransition(R.anim.right_out,R.anim.left_in);
             }
         });
+    }
+
+    private class backgroundTask extends AsyncTask<String,Void,Void>{
+
+        @Override
+        protected Void doInBackground(String... params) {
+            String profileName = params[0];
+            extractFromFile.serializeProfileNameList(profileNames,EditProfileActivity.this);
+            // makeProfileObjSerializable(profileName,profiles);
+            extractFromFile.serializeProfiles(profileName,profiles,EditProfileActivity.this);
+
+            return null;
+        }
     }
 
     private void returnMain(){

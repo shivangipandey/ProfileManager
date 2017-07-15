@@ -31,6 +31,9 @@ public class Profiles implements Serializable{
     private int imageBackgroundId = R.drawable.blurry4;
     private boolean[] isToDoListEnabled = {false,false,false,false,false};
     private String[] works = new String[5];
+    private int brightness = -1;
+    private boolean isBrightnessEnabled = false;
+
     public Profiles(){
     }
 
@@ -45,7 +48,9 @@ public class Profiles implements Serializable{
         this.endHour = endHour;
         this.endMin = endMin;
     }
-
+    public void setBrightnessEnabled(boolean isBrightnessEnabled){
+        this.isBrightnessEnabled = isBrightnessEnabled;
+    }
     public void setPendingSilenceIntent(int pendingIntentSilenceId){
         this.pendingIntentSilenceId = pendingIntentSilenceId;
     }
@@ -67,6 +72,9 @@ public class Profiles implements Serializable{
     }
     public void setAlarmMode(boolean alarmMode){
         this.alarmMode = alarmMode;
+    }
+    public void setBrightness(int brightness){
+        this.brightness = brightness;
     }
 
     public void setDaysOfWeek(int index,boolean isEnable){
@@ -155,5 +163,9 @@ public class Profiles implements Serializable{
     }
     public String[] getWorks(){
         return works;
+    }
+    public int getBrightness(){ return  brightness;}
+    public boolean getBrightnessEnabled(){
+        return isBrightnessEnabled;
     }
 }
