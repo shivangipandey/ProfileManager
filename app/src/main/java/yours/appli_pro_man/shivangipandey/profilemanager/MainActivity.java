@@ -8,9 +8,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -18,30 +21,31 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import yours.appli_pro_man.shivangipandey.profilemanager.R;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity{
 
-    private FloatingActionButton floatingActionButton;
     ProfileNames profileNames = null;
     ListView listView;
     ExtractFromFile extractFromFile;
     Session session;
     TextView mStarting;
     ImageView imageView;
-
+    private FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Profiles");
+
         session = new Session(this);
 
-        mStarting = (TextView)findViewById(R.id.textViewStarting);
-        imageView = (ImageView)findViewById(R.id.welcome_image);
+        mStarting = findViewById(R.id.textViewStarting);
+        imageView = findViewById(R.id.welcome_image);
 
         if(session.getLaunched()) {
             session.setProtected(false,"huawei");
@@ -115,13 +119,13 @@ public class MainActivity extends AppCompatActivity{
         extractFromFile = new ExtractFromFile();
         midnightAlarmStart();
 
-        listView = (ListView) findViewById(R.id.profileListView);
+        listView = findViewById(R.id.profileListView);
         final ArrayList<Profiles> profilesArrayList = new ArrayList<>();
         listView.setEmptyView(mStarting);
 
         //profileNames = getSerializedList();
-        profileNames = extractFromFile.deserializedProfileNamesList(MainActivity.this);
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        profileNames = extractFromFile.deserializedProfileNamesList(MainActivity.this, "profileNames");
+        floatingActionButton = findViewById(R.id.fab);
         floatingActionButton.bringToFront();
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,7 +231,7 @@ public class MainActivity extends AppCompatActivity{
             extractFromFile.delProfile(name,MainActivity.this);
            // File profileFile = new File(getFilesDir().getAbsolutePath(),name+"ser");
            // profileFile.delete();
-            extractFromFile.serializeProfileNameList(profileNames,MainActivity.this);
+        extractFromFile.serializeProfileNameList(profileNames, MainActivity.this, "profileNames");
           /*  File outputFile = new File(getFilesDir(),"profileNames");
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(outputFile));
             out.writeObject(profileNames);
@@ -269,7 +273,7 @@ public class MainActivity extends AppCompatActivity{
 
     private void midnightAlarmStart(){
         Intent i = new Intent(this,BootUpReciever.class);
-       PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0,i,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
         Calendar calendar = Calendar.getInstance();
         Calendar cal = Calendar.getInstance();
@@ -285,5 +289,27 @@ public class MainActivity extends AppCompatActivity{
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.action_switch_basic:
+                Intent i = new Intent(this, MapsActivity.class);
+                startActivity(i);
+                overridePendingTransition(R.anim.from_middle, R.anim.to_middle);
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
 }

@@ -5,22 +5,18 @@ import android.app.AlarmManager;
 import android.app.DialogFragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -35,7 +31,6 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import yours.appli_pro_man.shivangipandey.profilemanager.R;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.HamButton;
@@ -46,15 +41,11 @@ import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.io.File;
 import java.util.Calendar;
-import java.util.Set;
 
 public class EditProfileActivity extends AppCompatActivity{
 
     ExtractFromFile extractFromFile;
-    private EditText mProfileName;
-    private Button startTime, endTime,mSave,mCancel;
     int checkBoxIDS[] = {R.id.sunday, R.id.monday, R.id.tuesday, R.id.wednesday, R.id.thrusday, R.id.friday, R.id.saturday};
-    private CheckBox[] checkBoxes = new CheckBox[7];
     boolean daysEnable[] = new boolean[7];
     Profiles profiles;
     ProfileNames profileNames;
@@ -72,26 +63,18 @@ public class EditProfileActivity extends AppCompatActivity{
     SeekBar brightnessSeekbar;
     int brightness = -1;
     Switch brightnessSwitch;
+    private EditText mProfileName;
+    private Button startTime, endTime, mSave, mCancel;
+    private CheckBox[] checkBoxes = new CheckBox[7];
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
         session = new Session(this);
-     /*   ActionBar mActionBar = getSupportActionBar();
-        assert mActionBar != null;
-        mActionBar.setDisplayShowHomeEnabled(false);
-        mActionBar.setDisplayShowTitleEnabled(false);
-        LayoutInflater mInflator = LayoutInflater.from(this);
 
-        View actionBar = mInflator.inflate(R.layout.custom_action_bar, null);
-        TextView mTitleTextView = (TextView)actionBar.findViewById(R.id.title_text);
-        mTitleTextView.setText("Modify");
-        mActionBar.setCustomView(actionBar);
-        mActionBar.setDisplayShowCustomEnabled(true);
-        ((Toolbar) actionBar.getParent()).setContentInsetsAbsolute(0,0);*/
-
-        bmb = (BoomMenuButton)findViewById(R.id.action_bar_right_bmb);
+        bmb = findViewById(R.id.action_bar_right_bmb);
         bmb.setButtonEnum(ButtonEnum.Ham);
         bmb.setPiecePlaceEnum(PiecePlaceEnum.HAM_3);
         bmb.setButtonPlaceEnum(ButtonPlaceEnum.HAM_3);
@@ -99,18 +82,18 @@ public class EditProfileActivity extends AppCompatActivity{
         extractFromFile = new ExtractFromFile();
         profiles = new Profiles();
 
-        startTime = (Button) findViewById(R.id.start_time);
-        endTime = (Button) findViewById(R.id.endTime);
-        mProfileName = (EditText) findViewById(R.id.profileNameEditText);
-        mSave = (Button)findViewById(R.id.saveProfile);
-        mCancel = (Button)findViewById(R.id.cancelProfile);
+        startTime = findViewById(R.id.start_time);
+        endTime = findViewById(R.id.endTime);
+        mProfileName = findViewById(R.id.profileNameEditText);
+        mSave = findViewById(R.id.saveProfile);
+        mCancel = findViewById(R.id.cancelProfile);
         profileNames = (ProfileNames)getIntent().getSerializableExtra("profileNames");
-        imageView = (ImageView)findViewById(R.id.imageView);
-        circularImageView = (CircularImageView)findViewById(R.id.circle_icon);
-        scrollView = (ScrollView) findViewById(R.id.scrollView);
-        brightnessSeekbar = (SeekBar) findViewById(R.id.brightness_seekbar);
+        imageView = findViewById(R.id.imageView);
+        circularImageView = findViewById(R.id.circle_icon);
+        scrollView = findViewById(R.id.scrollView);
+        brightnessSeekbar = findViewById(R.id.brightness_seekbar);
         brightnessSeekbar.setMax(225);
-        brightnessSwitch = (Switch)findViewById(R.id.switchBrightness);
+        brightnessSwitch = findViewById(R.id.switchBrightness);
         brightnessSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -141,7 +124,7 @@ public class EditProfileActivity extends AppCompatActivity{
         // bmb = (BoomMenuButton)findViewById(R.id.bmb);
 
         for (int i = 0; i < checkBoxIDS.length; i++) {
-            checkBoxes[i] = (CheckBox) findViewById(checkBoxIDS[i]);
+            checkBoxes[i] = findViewById(checkBoxIDS[i]);
         }
 
         for (int i = 0; i < bmb.getPiecePlaceEnum().pieceNumber(); i++) {
@@ -181,7 +164,7 @@ public class EditProfileActivity extends AppCompatActivity{
         }
 
         for (int i = 0; i < checkBoxIDS.length; i++) {
-            checkBoxes[i] = (CheckBox) findViewById(checkBoxIDS[i]);
+            checkBoxes[i] = findViewById(checkBoxIDS[i]);
         }
 
         Calendar cal = Calendar.getInstance();
@@ -249,8 +232,10 @@ public class EditProfileActivity extends AppCompatActivity{
                     if(!Settings.System.canWrite(EditProfileActivity.this)){
                         Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
                         intent.setData(Uri.parse("package:" +getPackageName()));
-                        startActivity(intent);
-                        Toast.makeText(EditProfileActivity.this,"Enable manage settings to allow device to change brightness", Toast.LENGTH_LONG).show();
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivity(intent);
+                        }
+                        Toast.makeText(EditProfileActivity.this, "Enable manage settings to allow device to change brightness", Toast.LENGTH_LONG).show();
                         return;
                     }
                     else {
@@ -398,7 +383,7 @@ public class EditProfileActivity extends AppCompatActivity{
         mSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               String profileName = mProfileName.getText().toString().trim();
+                String profileName = mProfileName.getText().toString().trim();
                 if(TextUtils.isEmpty(profileName)){
                     Toast.makeText(EditProfileActivity.this, "Enter profile name", Toast.LENGTH_SHORT).show();
                     return;
@@ -451,7 +436,6 @@ public class EditProfileActivity extends AppCompatActivity{
 
                 int hourOfDay_start = profiles.getStartHour();
                 int minute_start = profiles.getStartMin();
-                profiles.setBrightness(brightness);
 
                 AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
                 Intent i = new Intent(EditProfileActivity.this,UnsilenceNotifications.class);
@@ -465,10 +449,11 @@ public class EditProfileActivity extends AppCompatActivity{
                 }
 
                 setTimeMethod(hourOfDay_start,minute_start,NotificationSilenceReciever.class,"com.example.shivangipandey.notificationoff.NotificationSilenceReciever",profiles.getPendingIntentSilenceId());
-
-                new backgroundTask().execute(profileName);
+                profiles.setBrightness(brightness);
           //      makeListSerializable(profileNames);
-
+                extractFromFile.serializeProfileNameList(profileNames, EditProfileActivity.this, "profileNames");
+                // makeProfileObjSerializable(profileName,profiles);
+                extractFromFile.serializeProfiles(profileName, profiles, EditProfileActivity.this);
                 returnMain();
             }
 
@@ -483,51 +468,12 @@ public class EditProfileActivity extends AppCompatActivity{
         });
     }
 
-    private class backgroundTask extends AsyncTask<String,Void,Void>{
-
-        @Override
-        protected Void doInBackground(String... params) {
-            String profileName = params[0];
-            extractFromFile.serializeProfileNameList(profileNames,EditProfileActivity.this);
-            // makeProfileObjSerializable(profileName,profiles);
-            extractFromFile.serializeProfiles(profileName,profiles,EditProfileActivity.this);
-
-            return null;
-        }
-    }
-
     private void returnMain(){
         Intent i = new Intent(this,MainActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
         finish();
     }
-  /*  private void makeProfileObjSerializable(String proName,Profiles profile){
-        try {
-            File outputFile = new File(getFilesDir(),proName+".ser");
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(outputFile));
-            out.writeObject(profile);
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    private void makeListSerializable(ProfileNames profileNames){
-
-        try {
-            File outputFile = new File(getFilesDir(),"profileNames");
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(outputFile));
-            out.writeObject(profileNames);
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
-
-  /* private void delFile(String oldName){
-       File profileFile = new File(getFilesDir().getAbsolutePath(),oldName+"ser");
-        profileFile.delete();
-   }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

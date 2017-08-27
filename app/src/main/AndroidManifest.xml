@@ -6,24 +6,31 @@
 
     <!-- permission required to use Alarm Manager -->
 
+
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.CAMERA"
-        tools:node="remove"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.CAMERA"
+        tools:node="remove" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <application
+
         android:allowBackup="true"
         android:icon="@drawable/icon2"
         android:label="@string/app_name"
         android:roundIcon="@drawable/icon2"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="yours.appli_pro_man.shivangipandey.profilemanager.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,23 +38,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="yours.appli_pro_man.shivangipandey.profilemanager.EditProfileActivity"
+            android:name=".EditProfileActivity"
             android:label="Modify"
             android:theme="@style/AppTheme1"
             android:windowSoftInputMode="stateHidden" />
 
-        <receiver android:name="yours.appli_pro_man.shivangipandey.profilemanager.NotificationSilenceReciever">
+        <receiver android:name=".NotificationSilenceReciever">
             <intent-filter>
                 <action android:name="com.example.shivangipandey.notificationoff.NotificationSilenceReciever" />
             </intent-filter>
         </receiver>
-        <receiver android:name="yours.appli_pro_man.shivangipandey.profilemanager.UnsilenceNotifications">
+        <receiver android:name=".UnsilenceNotifications">
             <intent-filter>
                 <action android:name="com.example.shivangipandey.notificationoff.UnsilenceNotificationReciever" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name="yours.appli_pro_man.shivangipandey.profilemanager.BootUpReciever"
+            android:name=".BootUpReciever"
             android:enabled="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
@@ -58,24 +65,30 @@
         </receiver>
 
         <activity
-            android:name="yours.appli_pro_man.shivangipandey.profilemanager.modeDialogActivity"
+            android:name=".modeDialogActivity"
             android:label="Select modes"
             android:theme="@style/AppCompatAlertDialogStyle" />
         <activity
-            android:name="yours.appli_pro_man.shivangipandey.profilemanager.ProfilePictureDialogActivity"
+            android:name=".ProfilePictureDialogActivity"
             android:label="Select picture"
             android:theme="@style/AppCompatAlertDialogStyle" />
         <activity
-            android:name="yours.appli_pro_man.shivangipandey.profilemanager.VolumeActivity"
+            android:name=".VolumeActivity"
             android:label="Set volume"
             android:theme="@style/AppCompatAlertDialogStyle" />
         <activity
-            android:name="yours.appli_pro_man.shivangipandey.profilemanager.ToDoList"
+            android:name=".ToDoList"
             android:label="Add work to do"
             android:theme="@style/AppCompatAlertDialogStyle" />
-        <activity android:name="yours.appli_pro_man.shivangipandey.profilemanager.IntroActivity"></activity>
+        <activity android:name=".IntroActivity" />
+        <activity android:name=".EditMaps"></activity>
+        <activity android:name=".MapsActivity"></activity>
 
-        <service android:name="yours.appli_pro_man.shivangipandey.profilemanager.OnCheckService"></service>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <service android:name=".OnCheckService" />
 
     </application>
 

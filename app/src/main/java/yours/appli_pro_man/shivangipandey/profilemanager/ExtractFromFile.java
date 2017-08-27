@@ -29,11 +29,11 @@ public class ExtractFromFile {
         return p;
     }
 
-    public ProfileNames deserializedProfileNamesList(Context context){
+    public ProfileNames deserializedProfileNamesList(Context context, String name) {
         ObjectInputStream in = null;
         ProfileNames p = null;
         try {
-            File file = new File(context.getFilesDir(),"profileNames");
+            File file = new File(context.getFilesDir(), name);
             in = new ObjectInputStream(new FileInputStream(file));
             p = (ProfileNames) in.readObject();
             in.close();
@@ -43,10 +43,11 @@ public class ExtractFromFile {
         }
         return p;
     }
-    public void serializeProfileNameList(ProfileNames profileNames,Context context){
+
+    public void serializeProfileNameList(ProfileNames profileNames, Context context, String name) {
 
         try {
-            File outputFile = new File(context.getFilesDir(),"profileNames");
+            File outputFile = new File(context.getFilesDir(), name);
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(outputFile));
             out.writeObject(profileNames);
             out.close();

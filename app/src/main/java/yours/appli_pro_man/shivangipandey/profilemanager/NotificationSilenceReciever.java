@@ -13,11 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
-
-import yours.appli_pro_man.shivangipandey.profilemanager.R;
 
 import java.util.Calendar;
 
@@ -130,7 +126,7 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
 
         session.setCurrentVolume(volume,profileName);
 
-        if (!(checkUnsilencePIExist(context, false))) {
+        if (profiles.getLatLng() == null && !(checkUnsilencePIExist(context, false))) {
             setPendingIntentUnSilenceRecievr(context);
         }
 
@@ -265,10 +261,7 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_WEEK);
 
-        if(profiles.getDaysOfWeek(day-1))
-            return true;
-        else
-            return false;
+        return profiles.getDaysOfWeek(day - 1);
     }
 
     private void stopP(Context context){

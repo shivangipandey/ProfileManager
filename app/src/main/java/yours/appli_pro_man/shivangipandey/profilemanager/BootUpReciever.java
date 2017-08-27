@@ -27,9 +27,12 @@ public class BootUpReciever extends BroadcastReceiver {
         }
 
         //ProfileNames profileNames = getSerializedList(context);
-        ProfileNames profileNames = extractFromFile.deserializedProfileNamesList(context);
+        ProfileNames profileNames = extractFromFile.deserializedProfileNamesList(context, "profileNames");
         if(profileNames != null){
             ArrayList<String> arrayList = profileNames.getProfileNameArrayList();
+            profileNames = extractFromFile.deserializedProfileNamesList(context, "profileNames_Maps");
+            if (profileNames != null)
+                arrayList.addAll(profileNames.getProfileArrayListMap());
             Session session = new Session(context);
             for(int i = 0;i<arrayList.size();i++){
               //  Profiles profiles = getSerializedProfile(arrayList.get(i),context);

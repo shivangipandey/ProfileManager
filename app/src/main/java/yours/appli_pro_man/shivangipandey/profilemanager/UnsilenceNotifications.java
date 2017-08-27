@@ -14,8 +14,6 @@ import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
-import yours.appli_pro_man.shivangipandey.profilemanager.R;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
@@ -131,7 +129,7 @@ public class UnsilenceNotifications extends BroadcastReceiver{
             } else {
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
             }
-            audioManager.setStreamVolume(streams[0],2,0);
+            //audioManager.setStreamVolume(streams[0],2,0);
             Toast.makeText(context, "Do not disturb enabled", Toast.LENGTH_LONG).show();
         } else {
             if (profiles.getGeneralMode()) {
