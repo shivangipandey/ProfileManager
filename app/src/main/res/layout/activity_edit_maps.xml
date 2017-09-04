@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
+    tools:context="yours.appli_pro_man.shivangipandey.profilemanager.EditMaps">
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="52dp"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <RelativeLayout
+                android:id="@+id/imageRelativeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/mapImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:scaleType="centerCrop"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:src="@drawable/dummy_map"
+                    android:layout_centerHorizontal="true"
+                    />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@android:color/white"
+                    android:layout_below="@id/mapImage"
+                    />
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:layout_below="@id/mapImage"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/circle_icon"
+                    android:layout_marginTop="-50dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/study"
+                    app:civ_border_color="#EEEEEE"
+                    app:civ_border_width="4dp"
+                    app:civ_shadow="true"
+                    app:civ_shadow_radius="10"
+                    app:civ_shadow_color="#8BC34A"/>
+                <EditText
+                    android:id="@+id/name"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_below="@id/circle_icon"
+                    android:paddingLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="4dp"
+                    android:background="@drawable/circle_background"
+                    android:hint="Profile Name"
+                    android:layout_toLeftOf="@+id/action_bar_right_bmb"
+                    android:layout_toStartOf="@+id/action_bar_right_bmb" />
+
+                <com.nightonke.boommenu.BoomMenuButton
+                    android:id="@+id/action_bar_right_bmb"
+                    android:layout_width="wrap_content"
+                    android:layout_below="@id/circle_icon"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="-5dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/circle"
+                    app:bmb_backgroundEffect="false"
+                    app:bmb_boomEnum="boomParabola_3" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:padding="10dp"
+                android:textColor="@android:color/black"
+                android:text="Radius : "
+                android:id="@+id/textView"
+                android:layout_below="@+id/imageRelativeLayout"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="14dp"
+                android:layout_marginStart="14dp" />
+
+            <EditText
+                android:id="@+id/proximityRadius"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginRight="65dp"
+                android:padding="10dp"
+                android:background="@drawable/circle_background"
+                android:hint="(in meters)"
+                android:layout_alignBaseline="@+id/textView"
+                android:layout_alignBottom="@+id/textView"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="65dp" />
+                <TextView
+                    android:id="@+id/repeat_textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/proximityRadius"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="Repeat : "
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_below="@id/repeat_textView"
+                    android:id="@+id/checkbox_linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:background="@drawable/circle_background">
+                    <CheckBox
+                        android:id="@+id/sunday"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="30dp"
+                        android:text="S"
+                        android:button="@android:color/transparent"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center"
+                        android:background="@drawable/circle_background"
+                        />
+                    <CheckBox
+                        android:id="@+id/monday"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="1"
+                        android:text="M"
+                        android:button="@android:color/transparent"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/circle_background"
+                        android:gravity="center"
+                        />
+                    <CheckBox
+                        android:id="@+id/tuesday"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="1"
+                        android:text="T"
+                        android:button="@android:color/transparent"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/circle_background"
+                        android:gravity="center"
+                        />
+
+                    <CheckBox
+                        android:id="@+id/wednesday"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/circle_background"
+                        android:button="@android:color/transparent"
+                        android:gravity="center"
+                        android:text="W" />
+
+                    <CheckBox
+                        android:id="@+id/thrusday"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="30dp"
+                        android:text="T"
+                        android:button="@android:color/transparent"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center"
+                        android:background="@drawable/circle_background"
+                        />
+                    <CheckBox
+                        android:id="@+id/friday"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="30dp"
+                        android:text="F"
+                        android:layout_marginRight="10dp"
+                        android:button="@android:color/transparent"
+                        android:gravity="center"
+                        android:background="@drawable/circle_background"
+                        />
+                    <CheckBox
+                        android:id="@+id/saturday"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="30dp"
+                        android:text="S"
+                        android:button="@android:color/transparent"
+                        android:gravity="center"
+                        android:background="@drawable/circle_background"
+                        />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_below="@id/checkbox_linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <Switch
+                        android:id="@+id/switchBrightness"
+                        android:layout_width="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:enabled="true"
+                        android:textStyle="bold"
+                        android:textColor="#616161"
+                        android:checked="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_height="wrap_content"
+                        android:text="Set Brightness  "/>
+
+                    <SeekBar
+                        android:layout_below="@id/switchBrightness"
+                        android:id="@+id/brightness_seekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/circle_background"
+                        />
+
+                </RelativeLayout>
+            </RelativeLayout>
+    </ScrollView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:text="save"
+        android:layout_alignParentBottom="true"
+        android:background="#18E9D6"
+        >
+        <Button
+            android:background="?selectableItemBackgroundBorderless"
+            android:id="@+id/saveButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:text="Ok"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:drawableRight="@drawable/ok"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/view2"
+            android:layout_toStartOf="@+id/view2" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/view2" />
+
+        <Button
+            android:background="?selectableItemBackgroundBorderless"
+            android:id="@+id/cancelProfile"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:text="Cancel"
+            android:textColor="@android:color/white"
+            android:drawableRight="@drawable/cancel"
+            android:textAllCaps="false"
+            android:layout_height="50dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/view2"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/white" />
+
+        <Button
+            android:background="#FF5252"
+            android:id="@+id/deleteProfile"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:text="Delete"
+            android:textColor="@android:color/white"
+            android:drawableRight="@drawable/cancel"
+            android:textAllCaps="false"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/view2"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </LinearLayout>
+</RelativeLayout>
+

@@ -126,7 +126,7 @@ public class NotificationSilenceReciever extends BroadcastReceiver {
 
         session.setCurrentVolume(volume,profileName);
 
-        if (profiles.getLatLng() == null && !(checkUnsilencePIExist(context, false))) {
+        if (profiles.getRadius() == 0 && !(checkUnsilencePIExist(context, false))) {
             setPendingIntentUnSilenceRecievr(context);
         }
 

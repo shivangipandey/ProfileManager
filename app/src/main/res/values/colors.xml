@@ -1,45 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="enableDay">@android:color/holo_blue_light</color>
-    <color name="disableDay">@android:color/holo_blue_dark</color>
     <color name="colorPrimary">#2196F3</color>
     <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="ColorPrimary">#FF5722</color>
-    <color name="ColorPrimaryDark">#E64A19</color>
 
-    <color name="screen1">#F44336</color>
-    <color name="screen2">#9C27B0</color>
     <color name="screen3">#009688</color>
-    <color name="screen4">#FF9800</color>
     <color name="screen5">#607D8B</color>
-
-    <color name="dot_active1">#C2185B</color>
-    <color name="dot_active2">#7B1FA2</color>
-    <color name="dot_active3">#00695C</color>
-    <color name="dot_active4">#EF6C00</color>
-    <color name="dot_active5">#37474F</color>
-
-    <color name="dot_fade1">#F06292</color>
-    <color name="dot_fade2">#BA68C8</color>
-    <color name="dot_fade3">#4DB6AC</color>
-    <color name="dot_fade4">#FFB74D</color>
-    <color name="dot_fade5">#90A4AE</color>
-
-    <array name="dot_active">
-        <item>@color/dot_active1</item>
-        <item>@color/dot_active2</item>
-        <item>@color/dot_active3</item>
-        <item>@color/dot_active4</item>
-        <item>@color/dot_active5</item>
-    </array>
-
-    <array name="dot_inactive">
-        <item>@color/dot_fade1</item>
-        <item>@color/dot_fade2</item>
-        <item>@color/dot_fade3</item>
-        <item>@color/dot_fade4</item>
-        <item>@color/dot_fade5</item>
-    </array>
 
 </resources>

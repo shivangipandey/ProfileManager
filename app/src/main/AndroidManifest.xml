@@ -53,6 +53,11 @@
                 <action android:name="com.example.shivangipandey.notificationoff.UnsilenceNotificationReciever" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".ProximityAlertReciever">
+            <intent-filter>
+                <action android:name="yours.appli_wea_rep.proximityalertmodule.ProximityAlert"/>
+            </intent-filter>
+        </receiver>
         <receiver
             android:name=".BootUpReciever"
             android:enabled="true"

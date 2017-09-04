@@ -573,8 +573,8 @@ public class EditMaps extends AppCompatActivity {
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        IntentFilter intentFilter = new IntentFilter(proximityIntentAction);
-        registerReceiver(new ProximityAlertReciever(), intentFilter);
+        //IntentFilter intentFilter = new IntentFilter(proximityIntentAction);
+        //registerReceiver(new ProximityAlertReciever(), intentFilter);
         Intent intent = new Intent(proximityIntentAction);
         intent.putExtra("profile", profiles.getProfile());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);

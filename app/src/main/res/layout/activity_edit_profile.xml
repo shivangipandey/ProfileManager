@@ -88,8 +88,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:layout_below="@id/imageRelativeLayout"
-        android:id="@+id/relativeLayoutTop">
+        android:layout_below="@id/imageRelativeLayout">
         <TextView
             android:id="@+id/label"
             android:layout_width="match_parent"
@@ -130,7 +129,6 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textView5"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:gravity="center_horizontal"
@@ -141,7 +139,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/endtime_layout"
                 android:background="@android:color/white"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -275,7 +272,6 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/brightnessLayout"
             android:layout_below="@id/checkbox_linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -310,7 +306,6 @@
 </RelativeLayout>
     </ScrollView>
     <View
-        android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@android:color/white"
@@ -318,7 +313,6 @@
         android:layout_marginBottom="50dp"
          />
     <RelativeLayout
-        android:id="@+id/endLayout1"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"

@@ -4,8 +4,15 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,15 +37,10 @@ public class BootUpReciever extends BroadcastReceiver {
         ProfileNames profileNames = extractFromFile.deserializedProfileNamesList(context, "profileNames");
         if(profileNames != null){
             ArrayList<String> arrayList = profileNames.getProfileNameArrayList();
-            profileNames = extractFromFile.deserializedProfileNamesList(context, "profileNames_Maps");
-            if (profileNames != null)
-                arrayList.addAll(profileNames.getProfileArrayListMap());
             Session session = new Session(context);
             for(int i = 0;i<arrayList.size();i++){
-              //  Profiles profiles = getSerializedProfile(arrayList.get(i),context);
                 Profiles profiles = extractFromFile.deserializeProfile(arrayList.get(i),context);
 
-                Log.e("started","                 BOOTRECIEVERSTARTEDOUT" +"  "+profiles.getProfile());
                 if( profiles != null && session.getEnabled(profiles.getProfile())){
                     if(!checkSilenceIntent(profiles,context)){
                         Log.e("started","                 BOOTRECIEVERSTARTED in");
@@ -55,27 +57,43 @@ public class BootUpReciever extends BroadcastReceiver {
                             new ActiveProfiles(context).deleteValue(arrayList.get(i));
                         }
                         setTimeMethod(hourOfDay_start,minute_start,NotificationSilenceReciever.class,"com.example.shivangipandey.notificationoff.NotificationSilenceReciever",profiles.getPendingIntentSilenceId(),profiles,context);
-                      //  Toast.makeText(context,profiles.getProfile()+" enabled", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }
+        profileNames = (ProfileNames)extractFromFile.deserializedProfileNamesList(context,"profileNames_Maps");
+        if(profileNames != null){
+            ArrayList<String> arrayList = profileNames.getProfileArrayListMap();
+            Session session = new Session(context);
+            for(int i = 0;i<arrayList.size();i++){
+                Profiles profiles = extractFromFile.deserializeProfile(arrayList.get(i),context);
+
+                if( profiles != null && session.getEnabled(profiles.getProfile())){
+                    if(!checkSilenceIntent(profiles,context)){
+                        Log.e("started","                 BOOTRECIEVERSTARTED in");
+                        setProximityAlert(profiles.getLatLng().longitude,profiles.getLatLng().latitude,profiles.getRadius(),profiles.getPendingIntentProximityReieverId(),context,profiles.getProfile());
                     }
                 }
             }
         }
     }
+    private void setProximityAlert(double longitude, double lattitude, float radius, int requestCode,Context context,String profileName) {
+        String proximityIntentAction = "yours.appli_wea_rep.proximityalertmodule.ProximityAlert";
 
-  /*  private ProfileNames getSerializedList(Context context){
-        ObjectInputStream in = null;
-        ProfileNames p = null;
-        try {
-            File file = new File(context.getFilesDir(),"profileNames");
-            in = new ObjectInputStream(new FileInputStream(file));
-            p = (ProfileNames) in.readObject();
-            in.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
+        LocationManager locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+
+        Intent intent = new Intent(proximityIntentAction);
+        intent.putExtra("profile", profileName);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(context, "First enable LOCATION ACCESS in settings.", Toast.LENGTH_LONG).show();
+        } else {
+            locationManager.addProximityAlert(lattitude, longitude, radius, -1, pendingIntent);
         }
-        return p;
-    }*/
+
+    }
+
     private boolean checkSilenceIntent(Profiles profiles,Context context){
         Intent i2 = new Intent(context,NotificationSilenceReciever.class);
         i2.putExtra("profiles",profiles);
@@ -84,19 +102,6 @@ public class BootUpReciever extends BroadcastReceiver {
         return midPI2 != null;
     }
 
-   /* private Profiles getSerializedProfile(String profileName,Context context){
-        ObjectInputStream in = null;
-        Profiles p = null;
-        try {
-            File file = new File(context.getFilesDir(),profileName+".ser");
-            in = new ObjectInputStream(new FileInputStream(file));
-            p = (Profiles) in.readObject();
-            in.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return p;
-    }*/
     private void setTimeMethod(int hourOfDay, int minute, Class<?> cls, String action, int piID,Profiles profiles,Context context){
         boolean flag = false;
      //   Toast.makeText(context, "time set for "+hourOfDay+":"+minute, Toast.LENGTH_SHORT).show();

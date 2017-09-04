@@ -7,14 +7,15 @@ android {
         applicationId "yours.appli_pro_man.shivangipandey.profilemanager"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 6
-        versionName "1.1"
+        versionCode 7
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'proguard-rules.pro'
         }
     }
 }
@@ -27,7 +28,10 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:26.0.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.google.android.gms:play-services:11.0.4'
+    compile 'com.google.android.gms:play-services-location:11.2.0'
+    compile 'com.google.android.gms:play-services-identity:11.2.0'
+    compile 'com.google.android.gms:play-services-maps:11.2.0'
+    compile 'com.google.android.gms:play-services-places:11.2.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:design:26.0.1'
     compile group: 'org.apache.httpcomponents', name: 'httpclient-android', version: '4.3.5.1'

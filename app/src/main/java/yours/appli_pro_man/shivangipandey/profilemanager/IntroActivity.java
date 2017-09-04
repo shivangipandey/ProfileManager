@@ -34,15 +34,15 @@ public class IntroActivity extends AppIntro {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
         permissionPage = AppIntroFragment.newInstance("Permissions","This app requires DO NOT DISTURB permission to keep" +
-                " your profiles interactive.", R.drawable.dndper, Color.parseColor("#f1c40f"));
+                " your profiles interactive.", R.drawable.dndper, Color.parseColor("#8D6E63"));
 
-        addSlide(AppIntroFragment.newInstance("Customize Profile", "Customize your own profile, that suits your needs.", R.drawable.screen1, Color.parseColor("#3498db")));
-        addSlide(AppIntroFragment.newInstance("Pin Point location radius", "Add ", R.drawable.intro_map, Color.parseColor("#1abc9c")));
-        addSlide(AppIntroFragment.newInstance("Reminder", "Don't miss out on your daily responsibilities, add reminder.", R.drawable.screen2, Color.parseColor("#34495e")));
+        addSlide(AppIntroFragment.newInstance("Customize Profile", "Customize your own profile, that suits your needs.", R.drawable.screen1, Color.parseColor("#FFB74D")));
+        addSlide(AppIntroFragment.newInstance("Pin Point location radius", "Add locations to activate your profile.", R.drawable.intro_map, Color.parseColor("#26A69A")));
+        addSlide(AppIntroFragment.newInstance("Reminder", "Don't miss out on your daily responsibilities, add reminder.", R.drawable.screen2, Color.parseColor("#F06292")));
         addSlide(AppIntroFragment.newInstance("Mode","Choose your own level of volume for every profile, afterall" +
-                " everyone has different needs.",R.drawable.screen3,getResources().getColor(R.color.screen3)));
+                " everyone has different needs.",R.drawable.screen3,Color.parseColor("#4DD0E1")));
         addSlide(AppIntroFragment.newInstance("Days","Choose your separate profile activation days depending on your" +
-                " schedule.", R.drawable.screen4, Color.parseColor("#2ecc71")));
+                " schedule.", R.drawable.screen4, Color.parseColor("#DCE775")));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             addSlide(permissionPage);
         }
